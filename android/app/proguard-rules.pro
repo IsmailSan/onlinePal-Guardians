@@ -1,0 +1,4 @@
+-keep class okhttp3.** { *; }
+-keep class retrofit2.** { *; }
+-dontwarn okhttp3.**
+-dontwarn retrofit2.**
