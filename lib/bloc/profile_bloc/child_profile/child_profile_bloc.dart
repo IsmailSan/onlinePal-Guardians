@@ -105,27 +105,32 @@ class ChildProfileBloc extends Bloc<ChildProfileEvent, ChildProfileState> {
     }
   }
 
-
   Future<void> _onChildAvatarList(
-      GetChildAvatarList event,
-      Emitter<ChildProfileState> emit,
-      ) async {
+    GetChildAvatarList event,
+    Emitter<ChildProfileState> emit,
+  ) async {
     emit(ChildProfileLoading());
+    print("➡️ GetChildAvatarList dipanggil dengan gender: ${event.gender}");
     try {
-      final response = await profileRepository.getChildAvatarList(gender: event.gender);
+      final response = await profileRepository.getChildAvatarList(
+        gender: event.gender,
+      );
+      print("✅ API response (raw): ${response.toJson()}");
       emit(ChildAvatarListSuccess(response: response));
     } catch (e) {
+      print("❌ Error ambil avatar: $e");
       emit(ChildAvatarError(message: e.toString()));
     }
   }
 
   Future<void> _onUpdateChildAvatar(
-      UpdateChildAvatar event,
-      Emitter<ChildProfileState> emit,
-      ) async {
+    UpdateChildAvatar event,
+    Emitter<ChildProfileState> emit,
+  ) async {
     emit(ChildProfileLoading());
     try {
-      final response = await profileRepository.updateChildAvatar(childProfileId: event.childProfileId, avatarId: event.avatarId);
+      final response = await profileRepository.updateChildAvatar(
+          childProfileId: event.childProfileId, avatarId: event.avatarId);
       emit(ChildAvatarUpdateSuccess(response: response));
     } catch (e) {
       emit(ChildAvatarError(message: e.toString()));

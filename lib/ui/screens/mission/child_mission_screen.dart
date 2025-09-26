@@ -175,7 +175,23 @@ class _ChildMissionScreenState extends State<ChildMissionScreen> {
                     ),
                     Row(
                       children: [
-                        ChildProfileSelector(),
+                        ChildProfileSelector(
+                          onProfileChanged: (profile) async {
+                            await SessionHelper().saveChildProfile(profile);
+
+                            context.read<MissionBloc>().add(GetMissions(
+                                childrenId: profile.userId,
+                                status: "active",
+                                isRefresh: true));
+                            context.read<MissionBloc>().add(GetMissions(
+                                childrenId: profile.userId,
+                                status: "waiting",
+                                isRefresh: true));
+                            context.read<MissionBloc>().add(GetMissionsHistory(
+                                  childrenId: profile.userId,
+                                ));
+                          },
+                        ),
                         SizedBox(width: 14.w),
                         MoreOptionsDropdown(),
                       ],

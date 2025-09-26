@@ -1,7 +1,7 @@
 class AppListResponse {
   final String? status;
   final String? message;
-  final List<AppData>? data;
+  final AppListData? data;
 
   AppListResponse({
     this.status,
@@ -13,9 +13,28 @@ class AppListResponse {
     return AppListResponse(
       status: json['status'],
       message: json['message'],
+      data: json['data'] != null ? AppListData.fromJson(json['data']) : null,
+    );
+  }
+}
+
+class AppListData {
+  final List<AppData>? data;
+  final String? nextCursor;
+
+  AppListData({
+    this.data,
+    this.nextCursor,
+  });
+
+  factory AppListData.fromJson(Map<String, dynamic> json) {
+    return AppListData(
       data: json['data'] != null
-          ? List<AppData>.from(json['data'].map((x) => AppData.fromJson(x)))
+          ? List<AppData>.from(
+              json['data'].map((x) => AppData.fromJson(x)),
+            )
           : [],
+      nextCursor: json['next_cursor'],
     );
   }
 }

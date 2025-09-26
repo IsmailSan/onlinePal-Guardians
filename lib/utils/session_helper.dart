@@ -32,6 +32,16 @@ class SessionHelper {
     return preferences.getString(StringValue.gender);
   }
 
+  Future<void> saveChildGender(String gender) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setString(StringValue.child_gender, gender);
+  }
+
+  Future<String?> getChildGender() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.getString(StringValue.child_gender);
+  }
+
   Future<void> saveChildProfile(ChildProfile profile) async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = jsonEncode(profile.toJson());
@@ -77,6 +87,21 @@ class SessionHelper {
   Future<bool> isPreferenceProfileFilled() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool('profile_preference_filled') ?? false;
+  }
+
+  Future<void> saveProfileId(int profileId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('profile_id', profileId);
+  }
+
+  Future<int?> getProfileId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('profile_id');
+  }
+
+  Future<void> deleteProfileId() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('profile_id');
   }
 
   Future<void> clearAllPreferences() async {

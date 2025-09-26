@@ -43,7 +43,7 @@ void main() {
   HttpOverrides.global = MyHttpOverrides();
   FlavorConfig(
     flavor: Flavor.DEV,
-    values: FlavorValues(baseUrl: "https://23ccdd857784.ngrok-free.app"),
+    values: FlavorValues(baseUrl: "https://402742374426.ngrok-free.app"),
     //http://onlinepal-web-admin.doterb.com"
   );
   SystemChrome.setPreferredOrientations([

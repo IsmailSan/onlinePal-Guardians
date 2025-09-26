@@ -78,12 +78,43 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     Emitter<MissionState> emit,
   ) async {
     try {
+      List<AppCategoryData> existingAppCategory = [];
+
+      // Hanya ambil existing jika bukan refresh dan sudah ada state sukses
+      if (state is AppCategoryListSuccess && !event.isRefresh) {
+        final current = state as AppCategoryListSuccess;
+
+        // Kalau nextCursor null, berarti tidak ada data baru
+        if (current.response.data?.nextCursor == null) return;
+
+        existingAppCategory = current.response.data?.data ?? [];
+      } else {
+        emit(MissionLoading());
+      }
+
       final response = await missionRepository.getAppCategoryList(
         cursor: event.cursor,
         limit: event.limit,
       );
 
-      emit(AppCategoryListSuccess(response));
+      // 🔥 Perbaikan di sini
+      final newCategories = response.data?.data ?? <AppCategoryData>[];
+
+      final allCategories = <AppCategoryData>[
+        ...existingAppCategory,
+        ...newCategories,
+      ];
+
+      final updatedResponse = AppCategoryListResponse(
+        status: response.status,
+        message: response.message,
+        data: AppCategoryListData(
+          data: allCategories,
+          nextCursor: response.data?.nextCursor,
+        ),
+      );
+
+      emit(AppCategoryListSuccess(updatedResponse));
     } catch (e) {
       emit(MissionError(e.toString()));
     }
@@ -94,10 +125,37 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
     Emitter<MissionState> emit,
   ) async {
     try {
+      // Kalau sebelumnya sudah ada data di state, ambil dulu
+      final currentState = state;
+      List<AppData> oldData = [];
+      String? nextCursor;
+
+      if (currentState is AppListSuccess && event.cursor != null) {
+        oldData = currentState.response.data?.data ?? [];
+        nextCursor = currentState.response.data?.nextCursor;
+      }
+
+      // Panggil API
       final response = await missionRepository.getAppList(
-          cursor: event.cursor,
-          limit: event.limit,
-          categoryAppId: event.appCategoryId);
+        cursor: event.cursor,
+        limit: event.limit,
+        categoryAppId: event.appCategoryId,
+      );
+
+      // Gabungkan data lama dengan data baru kalau pagination
+      final mergedData = <AppData>[
+        ...oldData,
+        ...(response.data?.data ?? []),
+      ];
+
+      final mergedResponse = AppListResponse(
+        status: response.status,
+        message: response.message,
+        data: AppListData(
+          data: mergedData,
+          nextCursor: response.data?.nextCursor,
+        ),
+      );
 
       emit(AppListSuccess(response));
     } catch (e) {

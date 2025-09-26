@@ -4,6 +4,7 @@ import 'package:online_pal_guardians/bloc/registration_bloc/registration_bloc.da
 import 'package:online_pal_guardians/bloc/registration_bloc/registration_event.dart';
 import 'package:online_pal_guardians/bloc/registration_bloc/registration_state.dart';
 import 'package:online_pal_guardians/shared/theme.dart';
+import 'package:online_pal_guardians/ui/screens/profile/create_profile_screen.dart';
 import 'package:online_pal_guardians/ui/screens/profile/guardian_profile_screen.dart';
 import 'package:online_pal_guardians/ui/widgets/custom_form_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -114,28 +115,30 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   return 'Password wajib diisi';
                                 } else if (val.length < 8) {
                                   return 'Password minimal 8 karakter';
-                                } else if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$').hasMatch(val)) {
+                                } else if (!RegExp(
+                                        r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$')
+                                    .hasMatch(val)) {
                                   return 'Password wajib mengandung huruf dan angka';
                                 }
                                 return null;
                               },
                             ),
                             SizedBox(height: 15.h),
-                              CustomFormField(
-                                label: 'Konfirmasi Password',
-                                hintText: '',
-                                controller: passwordConfirmationController,
-                                focusNode: passwordConfirmationFocusNode,
-                                isPassword: true,
-                                validator: (val) {
-                                  if (val == null || val.isEmpty) {
-                                    return 'Konfirmasi password wajib diisi';
-                                  } else if (val != passwordController.text) {
-                                    return 'Konfirmasi password tidak cocok';
-                                  }
-                                  return null;
-                                },
-                              ),
+                            CustomFormField(
+                              label: 'Konfirmasi Password',
+                              hintText: '',
+                              controller: passwordConfirmationController,
+                              focusNode: passwordConfirmationFocusNode,
+                              isPassword: true,
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Konfirmasi password wajib diisi';
+                                } else if (val != passwordController.text) {
+                                  return 'Konfirmasi password tidak cocok';
+                                }
+                                return null;
+                              },
+                            ),
                             SizedBox(height: 70.h),
                             BlocConsumer<RegistrationBloc, RegistrationState>(
                               listener: (context, state) {
@@ -144,13 +147,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (_) =>
-                                            const GuardianProfileScreen()),
+                                            const CreateProfileScreen()),
                                   );
                                 } else if (state is RegistrationError) {
                                   showDialog(
                                     context: context,
                                     barrierDismissible: false,
-                                    builder: (_) => ErrorDialog(message: state.message),
+                                    builder: (_) =>
+                                        ErrorDialog(message: state.message),
                                   );
                                 }
                               },
@@ -161,15 +165,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     onPressed: state is RegistrationLoading
                                         ? null
                                         : () {
-                                      // Navigator.pushReplacement(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //       builder: (_) =>
-                                      //       const CreateProfileScreen()),
-                                      // );
-                                      if (_formKey.currentState?.validate() != true) {
-                                        return;
-                                      }
+                                            if (_formKey.currentState
+                                                    ?.validate() !=
+                                                true) {
+                                              return;
+                                            }
                                             final userName =
                                                 userNameController.text.trim();
                                             final password =
@@ -179,23 +179,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                     .text
                                                     .trim();
 
-
-                                              context
-                                                  .read<RegistrationBloc>()
-                                                  .add(
-                                                    RegistrationButtonPressed(
-                                                      userName: userName,
-                                                      password: password,
-                                                      passwordConfirmation:
-                                                          passwordConfirmation,
-                                                    ),
-                                                  );
-
+                                            context
+                                                .read<RegistrationBloc>()
+                                                .add(
+                                                  RegistrationButtonPressed(
+                                                    userName: userName,
+                                                    password: password,
+                                                    passwordConfirmation:
+                                                        passwordConfirmation,
+                                                  ),
+                                                );
                                           },
                                     style: OutlinedButton.styleFrom(
-                                      side: const BorderSide(color: Colors.black),
+                                      side:
+                                          const BorderSide(color: Colors.black),
                                       shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8)),
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 16),
                                       backgroundColor: Colors.white,

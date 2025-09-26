@@ -66,7 +66,9 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
     DateTime endDate = startDate.add(const Duration(days: 6));
 
     String getDisplayFormat(DateTime date) {
-      return '${date.day} ${getMonthName(date.month)} ${date.year}';
+      String month = getMonthName(date.month);
+      String shortMonth = month.length > 4 ? month.substring(0, 4) : month;
+      return '${date.day} $shortMonth ${date.year}';
     }
 
     String getApiFormat(DateTime date) {
@@ -196,7 +198,6 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -259,7 +260,7 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Jadwal ",
+                      "Jadwal",
                       style: blackTextStyle.copyWith(
                           fontSize: 24.sp, fontWeight: bold),
                     ),
@@ -267,8 +268,7 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
                       children: [
                         ChildProfileSelector(
                           onProfileChanged: (profile) async {
-                            await SessionHelper()
-                                .saveChildProfile(profile);
+                            await SessionHelper().saveChildProfile(profile);
 
                             setState(() {
                               childName = profile.name ?? "";
@@ -458,20 +458,20 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
                                                   activityGrid[hour][day];
 
                                               ScheduleDetailDialog.show(
-                                                context: context,
-                                                title: data?.customName ?? "",
-                                                timeRange: buildSimpleTimeRange(
-                                                    data?.date ?? '',
-                                                    data?.timeStart ?? "",
-                                                    data?.timeEnd ?? ""),
-                                                repeatText: "",
-                                                note: data?.notes ?? "",
-                                                lastUpdate: formatLastUpdate(
-                                                    data?.updatedAt ?? "",
-                                                    childName),
-                                                scheduleId: data!.id,
-                                                schedule: data
-                                              );
+                                                  context: context,
+                                                  title: data?.customName ?? "",
+                                                  timeRange:
+                                                      buildSimpleTimeRange(
+                                                          data?.date ?? '',
+                                                          data?.timeStart ?? "",
+                                                          data?.timeEnd ?? ""),
+                                                  repeatText: "",
+                                                  note: data?.notes ?? "",
+                                                  lastUpdate: formatLastUpdate(
+                                                      data?.updatedAt ?? "",
+                                                      childName),
+                                                  scheduleId: data!.id,
+                                                  schedule: data);
                                             },
                                             child: Container(
                                               width: 80.w,
@@ -491,7 +491,8 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
                                                         ?.customName ??
                                                     "",
                                                 style: blackTextStyle.copyWith(
-                                                    fontSize: 10.sp,  fontWeight: bold),
+                                                    fontSize: 10.sp,
+                                                    fontWeight: bold),
                                                 textAlign: TextAlign.center,
                                               ),
                                             ),

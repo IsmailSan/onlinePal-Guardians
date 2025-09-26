@@ -27,6 +27,15 @@ class _CreateProfileScreenState extends State<CreateProfileScreen>
   }
 
   @override
+  void dispose() {
+    final session = SessionHelper();
+    session.setGuardianProfileFilled(false);
+    session.setChildProfileFilled(false);
+    session.setPreferenceProfileFilled(false);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -73,19 +82,24 @@ class _CreateProfileScreenState extends State<CreateProfileScreen>
                         child: GestureDetector(
                           onTap: () async {
                             final session = SessionHelper();
-                            final isGuardianDone = await session.isGuardianProfileFilled();
-                            final isChildDone = await session.isChildProfileFilled();
-                            final isPrefDone = await session.isPreferenceProfileFilled();
+                            final isGuardianDone =
+                                await session.isGuardianProfileFilled();
+                            final isChildDone =
+                                await session.isChildProfileFilled();
+                            final isPrefDone =
+                                await session.isPreferenceProfileFilled();
 
                             if (isGuardianDone && isChildDone && isPrefDone) {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const AvatarCollectionScreen()));
+                                      builder: (context) =>
+                                          const AvatarCollectionScreen()));
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text('Mohon lengkapi semua bagian profil terlebih dahulu.'),
+                                  content: Text(
+                                      'Mohon lengkapi semua bagian profil terlebih dahulu.'),
                                   backgroundColor: Colors.red,
                                 ),
                               );
@@ -112,20 +126,21 @@ class _CreateProfileScreenState extends State<CreateProfileScreen>
                 Center(
                   child: Text(
                     "Profil dan Preferensi",
-
                     style: blackTextStyle.copyWith(
-                        fontSize: 16.sp, fontWeight: bold,),
+                      fontSize: 16.sp,
+                      fontWeight: bold,
+                    ),
                   ),
                 ),
                 SizedBox(height: 30.h),
                 TabBar(
                   controller: _tabController,
                   indicatorPadding:
-                  EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+                      EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
                   labelColor: Colors.black,
                   unselectedLabelColor: Colors.grey,
                   labelStyle:
-                  TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
                   unselectedLabelStyle: TextStyle(fontSize: 14.sp),
                   tabs: tabs.map((title) => Tab(text: title)).toList(),
                   isScrollable: false,
@@ -135,8 +150,12 @@ class _CreateProfileScreenState extends State<CreateProfileScreen>
                     controller: _tabController,
                     children: const [
                       GuardianProfileScreen(),
-                      ChildProfileScreen(isRegistration: true,),
-                      PreferenceScreen()
+                      ChildProfileScreen(
+                        isRegistration: true,
+                      ),
+                      PreferenceScreen(
+                        isRegistration: true,
+                      )
                     ],
                   ),
                 ),

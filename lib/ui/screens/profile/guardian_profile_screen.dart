@@ -53,7 +53,6 @@ class _GuardianProfileScreenState extends State<GuardianProfileScreen> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -121,7 +120,7 @@ class _GuardianProfileScreenState extends State<GuardianProfileScreen> {
                 //         fontSize: 17.sp, fontWeight: semiBold),
                 //   ),
                 // if (!widget.isUpdateProfile)
-                  const SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Expanded(
                     child: BlocConsumer<ProfileBloc, ProfileState>(
                         listener: (context, state) {
@@ -139,16 +138,19 @@ class _GuardianProfileScreenState extends State<GuardianProfileScreen> {
                     cityController.text = cityController.text.isEmpty
                         ? state.getProfileResponse.data.city ?? ''
                         : cityController.text;
-                    postalCodeController.text = postalCodeController.text.isEmpty
-                        ? state.getProfileResponse.data.postalCode ?? ''
-                        : postalCodeController.text;
+                    postalCodeController.text =
+                        postalCodeController.text.isEmpty
+                            ? state.getProfileResponse.data.postalCode ?? ''
+                            : postalCodeController.text;
                     jobController.text = jobController.text.isEmpty
                         ? state.getProfileResponse.data.occupation ?? ''
                         : jobController.text;
-                    familyIncomeRangeController.text = familyIncomeRangeController
-                            .text.isEmpty
-                        ? state.getProfileResponse.data.rangeOfFamilyIncome ?? ''
-                        : familyIncomeRangeController.text;
+                    familyIncomeRangeController.text =
+                        familyIncomeRangeController.text.isEmpty
+                            ? state.getProfileResponse.data
+                                    .rangeOfFamilyIncome ??
+                                ''
+                            : familyIncomeRangeController.text;
                     numberOfChildrenController.text =
                         numberOfChildrenController.text.isEmpty
                             ? (state.getProfileResponse.data.numberOfChildren
@@ -306,7 +308,7 @@ class _GuardianProfileScreenState extends State<GuardianProfileScreen> {
                                 label: 'Rentang penghasilan keluarga',
                                 hintText: '',
                                 controller: familyIncomeRangeController,
-                                 isNumeric: false,
+                                isNumeric: false,
                                 validator: (val) {
                                   if (val == null || val.isEmpty) {
                                     return 'Penghasilan keluarga wajib diisi';
@@ -339,60 +341,50 @@ class _GuardianProfileScreenState extends State<GuardianProfileScreen> {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => const AvatarCollectionScreen(isUpdateProfile: true)));
+                                                  builder: (context) =>
+                                                      const AvatarCollectionScreen(
+                                                          isUpdateProfile:
+                                                              true)));
                                         },
                                         style: OutlinedButton.styleFrom(
-                                          side: const BorderSide(color: Colors.black),
+                                          side: const BorderSide(
+                                              color: Colors.black),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
-                                          padding: const EdgeInsets.symmetric(vertical: 8),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8),
                                           backgroundColor: Colors.white,
                                         ),
                                         child: Text(
                                           'Ubah Avatar',
-                                          style: blackTextStyle.copyWith(fontSize: 20.sp, fontWeight: bold),
+                                          style: blackTextStyle.copyWith(
+                                              fontSize: 20.sp,
+                                              fontWeight: bold),
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 20.h),
+                                  SizedBox(height: 20.h),
                                   BlocConsumer<ProfileBloc, ProfileState>(
                                     listener: (context, state) {
                                       if (state is UpdateProfileSuccess) {
                                         final session = SessionHelper();
                                         session.setGuardianProfileFilled(true);
-                                        // if (!widget.isUpdateProfile)
-                                        //   Navigator.pushReplacement(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (_) =>
-                                        //             const AvatarCollectionScreen()),
-                                        //   );
+
                                         showDialog(
                                           context: context,
                                           barrierDismissible: false,
-                                          builder: (_) => SuccessDialog(message: 'Profil Berhasil Diperbarui'),
+                                          builder: (_) => SuccessDialog(
+                                              message:
+                                                  'Profil Berhasil Diperbarui'),
                                         );
-                                        // ScaffoldMessenger.of(context)
-                                        //     .showSnackBar(
-                                        //   const SnackBar(
-                                        //     content: Text(
-                                        //         "Profil berhasil diperbarui"),
-                                        //     backgroundColor: Colors.green,
-                                        //   ),
-                                        // );
                                       } else if (state is ProfileError) {
-                                        // ScaffoldMessenger.of(context)
-                                        //     .showSnackBar(
-                                        //   SnackBar(
-                                        //     content: Text(state.message),
-                                        //     backgroundColor: Colors.red,
-                                        //   ),
-                                        // );
                                         showDialog(
                                           context: context,
                                           barrierDismissible: false,
-                                          builder: (_) => ErrorDialog(message: state.message),
+                                          builder: (_) => ErrorDialog(
+                                              message: state.message),
                                         );
                                       }
                                     },
@@ -405,9 +397,11 @@ class _GuardianProfileScreenState extends State<GuardianProfileScreen> {
                                             onPressed: state is ProfileLoading
                                                 ? null
                                                 : () {
-                                              if (_formKey.currentState?.validate() != true) {
-                                                return;
-                                              }
+                                                    if (_formKey.currentState
+                                                            ?.validate() !=
+                                                        true) {
+                                                      return;
+                                                    }
                                                     // if (nameController.text.isEmpty ||
                                                     //     gender == null ||
                                                     //     nationalityController
@@ -440,8 +434,8 @@ class _GuardianProfileScreenState extends State<GuardianProfileScreen> {
                                                         .read<ProfileBloc>()
                                                         .add(
                                                             ProfileSubmitButtonPressed(
-                                                          name:
-                                                              nameController.text,
+                                                          name: nameController
+                                                              .text,
                                                           dateOfBirth:
                                                               selectedBirthDate
                                                                   .toIso8601String(),
@@ -452,13 +446,14 @@ class _GuardianProfileScreenState extends State<GuardianProfileScreen> {
                                                           province:
                                                               provinceController
                                                                   .text,
-                                                          city:
-                                                              cityController.text,
+                                                          city: cityController
+                                                              .text,
                                                           postalCode:
                                                               postalCodeController
                                                                   .text,
                                                           occupation:
-                                                              jobController.text,
+                                                              jobController
+                                                                  .text,
                                                           rangeOfFamilyIncome:
                                                               familyIncomeRangeController
                                                                   .text,
@@ -476,8 +471,9 @@ class _GuardianProfileScreenState extends State<GuardianProfileScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(8),
                                               ),
-                                              padding: const EdgeInsets.symmetric(
-                                                  vertical: 8),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 8),
                                               backgroundColor: Colors.white,
                                             ),
                                             child: state is ProfileLoading

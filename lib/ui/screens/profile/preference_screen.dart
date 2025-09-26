@@ -9,8 +9,10 @@ import 'package:online_pal_guardians/utils/session_helper.dart';
 
 class PreferenceScreen extends StatefulWidget {
   final bool isUpdateProfile;
+  final bool isRegistration;
 
-  const PreferenceScreen({Key? key, this.isUpdateProfile = false})
+  const PreferenceScreen(
+      {Key? key, this.isUpdateProfile = false, this.isRegistration = false})
       : super(key: key);
 
   @override
@@ -125,17 +127,24 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
   @override
   void initState() {
     super.initState();
-
+    session = SessionHelper();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final profile = await SessionHelper().getChildProfile();
-      final childProfileId = profile?.id;
+      childProfileId = profile?.id;
 
       if (childProfileId != null) {
         context
             .read<ChildProfileBloc>()
-            .add(GetChildProfile(id: childProfileId));
+            .add(GetChildProfile(id: childProfileId ?? 0));
       }
     });
+  }
+
+  @override
+  void dispose() {
+    final session = SessionHelper();
+    session.deleteProfileId();
+    super.dispose();
   }
 
   @override
@@ -165,7 +174,7 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
                 padding: EdgeInsets.only(bottom: 20.h),
                 child: Column(
                   children: [
-                  SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
@@ -414,11 +423,33 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
                         return OutlinedButton(
                           onPressed: isLoading
                               ? null
-                              : () {
-                                  if (childProfileId != null) {
+                              : () async {
+                                  // ambil registeredProfileId dari session
+                                  final registeredProfileId =
+                                      await session.getProfileId();
+
+                                  // tentukan id yang dipakai
+                                  final targetId = widget.isRegistration
+                                      ? registeredProfileId
+                                      : childProfileId;
+
+                                  // kalau mode registrasi dan id masih null -> kasih pesan error
+                                  if (widget.isRegistration &&
+                                      registeredProfileId == null) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Mohon lengkapi profil anak terlebih dahulu'),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                    return; // stop proses
+                                  }
+
+                                  if (targetId != null) {
                                     context.read<ChildProfileBloc>().add(
                                           AddChildPreference(
-                                            id: childProfileId!,
+                                            id: targetId,
                                             favoritePhysicalActivities:
                                                 favoritePhysicialActivities,
                                             hobbies: favoriteHobbies,
@@ -435,7 +466,7 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
                             minimumSize: const Size(250, 50),
                             backgroundColor: Colors.white,
                           ),

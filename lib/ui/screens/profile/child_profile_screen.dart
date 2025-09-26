@@ -14,7 +14,8 @@ class ChildProfileScreen extends StatefulWidget {
   final bool isUpdateProfile;
   final bool isRegistration;
 
-  const ChildProfileScreen({Key? key, this.isUpdateProfile = false, this.isRegistration = false})
+  const ChildProfileScreen(
+      {Key? key, this.isUpdateProfile = false, this.isRegistration = false})
       : super(key: key);
 
   @override
@@ -75,7 +76,8 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            if (!widget.isUpdateProfile && !widget.isRegistration) const SizedBox(height: 16),
+            if (!widget.isUpdateProfile && !widget.isRegistration)
+              const SizedBox(height: 16),
             if (!widget.isUpdateProfile && !widget.isRegistration)
               Container(
                 width: double.infinity,
@@ -141,6 +143,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                       DateTime.tryParse(state.response.data.dateOfBirth) ??
                           selectedBirthDate;
                   livingWithParents ??= state.response.data.liveWithParents;
+                  SessionHelper().saveChildGender(gender ?? "");
                 }
               }, builder: (context, state) {
                 return SingleChildScrollView(
@@ -266,38 +269,48 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                             SizedBox(height: 40.h),
                             Column(
                               children: [
-                                  if (widget.isUpdateProfile)
-                                    SizedBox(
-                                      width: 250.w,
-                                      height: 55.h,
-                                      child: OutlinedButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => const AvatarCollectionScreen(isUpdateProfile: true, isParent: false,)));
-                                        },
-                                        style: OutlinedButton.styleFrom(
-                                          side: const BorderSide(color: Colors.black),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          padding: const EdgeInsets.symmetric(vertical: 8),
-                                          backgroundColor: Colors.white,
+                                if (widget.isUpdateProfile)
+                                  SizedBox(
+                                    width: 250.w,
+                                    height: 55.h,
+                                    child: OutlinedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const AvatarCollectionScreen(
+                                                      isUpdateProfile: true,
+                                                      isParent: false,
+                                                    )));
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        side: const BorderSide(
+                                            color: Colors.black),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
-                                        child: Text(
-                                          'Ubah Avatar Anak',
-                                          style: blackTextStyle.copyWith(fontSize: 20.sp, fontWeight: bold),
-                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8),
+                                        backgroundColor: Colors.white,
+                                      ),
+                                      child: Text(
+                                        'Ubah Avatar Anak',
+                                        style: blackTextStyle.copyWith(
+                                            fontSize: 20.sp, fontWeight: bold),
                                       ),
                                     ),
-                                  SizedBox(height: 20.h),
+                                  ),
+                                SizedBox(height: 20.h),
                                 BlocConsumer<ChildProfileBloc,
                                     ChildProfileState>(
                                   listener: (context, state) {
                                     if (state is CreateChildProfileSuccess) {
                                       final session = SessionHelper();
                                       session.setChildProfileFilled(true);
+                                      session.saveProfileId(
+                                          state.response.data.id);
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         const SnackBar(
@@ -306,7 +319,6 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                                           backgroundColor: Colors.green,
                                         ),
                                       );
-                                      Navigator.pop(context);
                                     } else if (state
                                         is UpdateChildProfileSuccess) {
                                       ScaffoldMessenger.of(context)

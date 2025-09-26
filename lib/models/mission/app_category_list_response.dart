@@ -1,7 +1,7 @@
 class AppCategoryListResponse {
   final String? status;
   final String? message;
-  final List<AppCategoryData>? data;
+  final AppCategoryListData? data;
 
   AppCategoryListResponse({
     this.status,
@@ -11,13 +11,32 @@ class AppCategoryListResponse {
 
   factory AppCategoryListResponse.fromJson(Map<String, dynamic> json) {
     return AppCategoryListResponse(
-      status: json['status'],
-      message: json['message'],
+      status: json['status'] as String?,
+      message: json['message'] as String?,
       data: json['data'] != null
-          ? List<AppCategoryData>.from(
-              json['data'].map((x) => AppCategoryData.fromJson(x)),
-            )
+          ? AppCategoryListData.fromJson(json['data'])
           : null,
+    );
+  }
+}
+
+class AppCategoryListData {
+  final List<AppCategoryData>? data;
+  final String? nextCursor;
+
+  AppCategoryListData({
+    this.data,
+    this.nextCursor,
+  });
+
+  factory AppCategoryListData.fromJson(Map<String, dynamic> json) {
+    return AppCategoryListData(
+      data: json['data'] != null
+          ? (json['data'] as List)
+              .map((x) => AppCategoryData.fromJson(x))
+              .toList()
+          : [],
+      nextCursor: json['next_cursor'] as String?,
     );
   }
 }
@@ -37,10 +56,10 @@ class AppCategoryData {
 
   factory AppCategoryData.fromJson(Map<String, dynamic> json) {
     return AppCategoryData(
-      id: json['id'],
-      name: json['name'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      id: json['id'] is int ? json['id'] as int : int.tryParse("${json['id']}"),
+      name: json['name'] as String?,
+      createdAt: json['created_at'] as String?,
+      updatedAt: json['updated_at'] as String?,
     );
   }
 }

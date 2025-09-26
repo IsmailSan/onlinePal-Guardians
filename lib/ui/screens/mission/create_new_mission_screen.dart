@@ -40,11 +40,11 @@ class _CreateNewMissionScreenState extends State<CreateNewMissionScreen> {
 
   String selectedMissionTypeLabel = 'Pembatasan akses';
   String selectedConditionLabel = 'Tidak ada';
-  String selectedCategoryLabel = 'Games';
+  String? selectedCategoryLabel;
   String selectedTimePeriodLabel = 'Satu hari';
-  String selectedAppLabel = '';
+  String? selectedAppLabel;
   int selectedCategoryId = 0;
-  int selectedAppId = 0;
+  int? selectedAppId;
 
   Future<void> _selectStartDate(BuildContext context) async {
     final today = DateTime.now();
@@ -287,67 +287,123 @@ class _CreateNewMissionScreenState extends State<CreateNewMissionScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "Kategori Aplikasi",
-                                  style: blackTextStyle.copyWith(
-                                    fontSize: 18.sp,
-                                    fontWeight: medium,
-                                  ),
-                                ),
-                                SizedBox(height: 20.h),
+                                // KATEGORI
                                 BlocBuilder<MissionBloc, MissionState>(
+                                  buildWhen: (previous, current) {
+                                    return current is MissionLoading ||
+                                        current is AppCategoryListSuccess ||
+                                        current is MissionError;
+                                  },
                                   builder: (context, state) {
                                     if (state is MissionLoading) {
-                                      return const Center(
-                                          child: CircularProgressIndicator());
+                                      return const Center(child: SizedBox());
                                     } else if (state
                                         is AppCategoryListSuccess) {
                                       final categories =
-                                          state.response.data ?? [];
+                                          state.response.data?.data ?? [];
 
-                                      return Container(
-                                        height: 60.h,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 12.w),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border(
-                                              bottom: BorderSide(
-                                                  color: lightBlueColor)),
-                                        ),
-                                        child: DropdownButtonHideUnderline(
-                                          child: DropdownButton<String>(
-                                            isExpanded: true,
-                                            value: selectedCategoryLabel,
-                                            icon: const Icon(
-                                                Icons.keyboard_arrow_down,
-                                                color: Colors.indigo),
-                                            style: blackTextStyle.copyWith(
-                                                fontSize: 16.sp),
-                                            items: categories.map((cat) {
-                                              return DropdownMenuItem<String>(
-                                                value: cat.name, // label
-                                                child: Text(cat.name ?? "-"),
+                                      // Jika kategori ada dan selectedCategoryLabel belum valid, inisialisasi (di luar build)
+                                      final needInitCategory =
+                                          categories.isNotEmpty &&
+                                              (selectedCategoryLabel == null ||
+                                                  !categories.any((c) =>
+                                                      c.name ==
+                                                      selectedCategoryLabel));
+                                      if (needInitCategory) {
+                                        final first = categories.first;
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          // setState di luar build
+                                          setState(() {
+                                            selectedCategoryLabel = first.name;
+                                            selectedCategoryId = first.id ?? 0;
+
+                                            // reset aplikasi karena kategori berubah/diinisialisasi
+                                            selectedAppLabel = null;
+                                            selectedAppId = 0;
+                                          });
+                                          // fetch app list untuk kategori pertama
+                                          context.read<MissionBloc>().add(
+                                                GetAppList(
+                                                    appCategoryId:
+                                                        selectedCategoryId),
                                               );
-                                            }).toList(),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                selectedCategoryLabel = value!;
+                                        });
+                                      }
 
-                                                final selected = categories
-                                                    .firstWhere((cat) =>
-                                                        cat.name == value);
-                                                selectedCategoryId =
-                                                    selected.id ?? 0;
-
-                                                context.read<MissionBloc>().add(
-                                                    GetAppList(
-                                                        appCategoryId:
-                                                            selectedCategoryId));
-                                              });
-                                            },
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Kategori Aplikasi",
+                                            style: blackTextStyle.copyWith(
+                                                fontSize: 18.sp,
+                                                fontWeight: medium),
                                           ),
-                                        ),
+                                          SizedBox(height: 20.h),
+                                          Container(
+                                            height: 60.h,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 12.w),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      color: lightBlueColor)),
+                                            ),
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton<String>(
+                                                isExpanded: true,
+                                                value: (selectedCategoryLabel !=
+                                                            null &&
+                                                        categories.any((c) =>
+                                                            c.name ==
+                                                            selectedCategoryLabel))
+                                                    ? selectedCategoryLabel
+                                                    : null,
+                                                hint: const Text(
+                                                    "Pilih kategori"),
+                                                icon: const Icon(
+                                                    Icons.keyboard_arrow_down,
+                                                    color: Colors.indigo),
+                                                style: blackTextStyle.copyWith(
+                                                    fontSize: 16.sp),
+                                                items: categories.map((cat) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: cat.name, // label
+                                                    child:
+                                                        Text(cat.name ?? "-"),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    selectedCategoryLabel =
+                                                        value!;
+                                                    final selected = categories
+                                                        .firstWhere((cat) =>
+                                                            cat.name == value);
+                                                    selectedCategoryId =
+                                                        selected.id ?? 0;
+
+                                                    selectedAppId = null;
+                                                    selectedAppLabel = null;
+
+                                                    context
+                                                        .read<MissionBloc>()
+                                                        .add(
+                                                          GetAppList(
+                                                              appCategoryId:
+                                                                  selectedCategoryId,
+                                                              cursor: 0),
+                                                        );
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       );
                                     } else if (state is MissionError) {
                                       return Text("Error: ${state.message}");
@@ -355,68 +411,107 @@ class _CreateNewMissionScreenState extends State<CreateNewMissionScreen> {
                                     return const SizedBox.shrink();
                                   },
                                 ),
-                                SizedBox(height: 20.h),
-                              ],
-                            ),
-                            SizedBox(height: 20.h),
-                            Text(
-                              "Nama Aplikasi",
-                              style: blackTextStyle.copyWith(
-                                fontSize: 18.sp,
-                                fontWeight: medium,
-                              ),
-                            ),
-                            SizedBox(height: 20.h),
-                            BlocBuilder<MissionBloc, MissionState>(
-                              builder: (context, state) {
-                                if (state is MissionLoading) {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                } else if (state is AppListSuccess) {
-                                  final apps = state.response.data ?? [];
 
-                                  return Container(
-                                    height: 60.h,
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 12.w),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: lightBlueColor)),
-                                    ),
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<String>(
-                                        isExpanded: true,
-                                        value: selectedAppLabel,
-                                        icon: const Icon(
-                                            Icons.keyboard_arrow_down,
-                                            color: Colors.indigo),
-                                        style: blackTextStyle.copyWith(
-                                            fontSize: 16.sp),
-                                        items: apps.map((app) {
-                                          return DropdownMenuItem<String>(
-                                            value: app.name, // label
-                                            child: Text(app.name ?? "-"),
-                                          );
-                                        }).toList(),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            selectedAppLabel = value!;
-                                            final selected = apps.firstWhere(
-                                                (app) => app.name == value);
-                                            selectedAppId = selected.id ??
-                                                0; // simpan ID app
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                } else if (state is MissionError) {
-                                  return Text("Error: ${state.message}");
-                                }
-                                return const SizedBox.shrink();
-                              },
+                                SizedBox(height: 20.h),
+
+                                // APLIKASI (bergantung pada AppList state)
+                                BlocBuilder<MissionBloc, MissionState>(
+                                  buildWhen: (previous, current) {
+                                    return current is AppListSuccess;
+                                  },
+                                  builder: (context, state) {
+                                    if (state is MissionLoading) {
+                                      return const Center(child: SizedBox());
+                                    } else if (state is AppListSuccess) {
+                                      final apps =
+                                          state.response.data?.data ?? [];
+                                      // sinkronkan pilihan hanya dengan list baru
+                                      String? currentValue;
+                                      if (apps.isNotEmpty) {
+                                        if (selectedAppLabel != null &&
+                                            apps.any((a) =>
+                                                a.name == selectedAppLabel)) {
+                                          // kalau value lama masih ada di list -> pakai
+                                          currentValue = selectedAppLabel;
+                                        } else {
+                                          // kalau tidak valid -> reset ke item pertama
+                                          currentValue = apps.first.name;
+                                          selectedAppLabel = currentValue;
+                                          selectedAppId = apps.first.id ?? 0;
+                                        }
+                                      }
+
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Nama Aplikasi",
+                                            style: blackTextStyle.copyWith(
+                                                fontSize: 18.sp,
+                                                fontWeight: medium),
+                                          ),
+                                          SizedBox(height: 20.h),
+                                          Container(
+                                            height: 60.h,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 12.w),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border(
+                                                  bottom: BorderSide(
+                                                      color: lightBlueColor)),
+                                            ),
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton<String>(
+                                                key: ValueKey(
+                                                    selectedCategoryId),
+                                                isExpanded: true,
+                                                value: (selectedAppLabel !=
+                                                            null &&
+                                                        apps.any((a) =>
+                                                            a.name ==
+                                                            selectedAppLabel))
+                                                    ? selectedAppLabel
+                                                    : null,
+                                                hint: const Text(
+                                                    "Pilih aplikasi"),
+                                                icon: const Icon(
+                                                    Icons.keyboard_arrow_down,
+                                                    color: Colors.indigo),
+                                                style: blackTextStyle.copyWith(
+                                                    fontSize: 16.sp),
+                                                items: apps.map((app) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: app.name,
+                                                    child:
+                                                        Text(app.name ?? "-"),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (value) {
+                                                  if (value == null) return;
+                                                  final selected =
+                                                      apps.firstWhere((app) =>
+                                                          app.name == value);
+                                                  setState(() {
+                                                    selectedAppLabel = value;
+                                                    selectedAppId =
+                                                        selected.id ?? 0;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    } else if (state is MissionError) {
+                                      return Text("Error: ${state.message}");
+                                    }
+                                    return const SizedBox.shrink();
+                                  },
+                                ),
+                              ],
                             ),
                             SizedBox(height: 20.h),
                             Column(
@@ -758,7 +853,7 @@ class _CreateNewMissionScreenState extends State<CreateNewMissionScreen> {
                                             condition: missionConditionMap[
                                                 selectedConditionLabel]!,
                                             categoryAppsId: selectedCategoryId,
-                                            appsId: selectedAppId,
+                                            appsId: selectedAppId ?? 0,
                                             directReward:
                                                 _directRewardController.text
                                                     .trim(),
