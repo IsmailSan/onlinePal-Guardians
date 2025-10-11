@@ -180,15 +180,15 @@ class _ChildMissionScreenState extends State<ChildMissionScreen> {
                             await SessionHelper().saveChildProfile(profile);
 
                             context.read<MissionBloc>().add(GetMissions(
-                                childrenId: profile.userId,
+                                childrenId: profile.userId ?? 0,
                                 status: "active",
                                 isRefresh: true));
                             context.read<MissionBloc>().add(GetMissions(
-                                childrenId: profile.userId,
+                                childrenId: profile.userId ?? 0,
                                 status: "waiting",
                                 isRefresh: true));
                             context.read<MissionBloc>().add(GetMissionsHistory(
-                                  childrenId: profile.userId,
+                                  childrenId: profile.userId ?? 0,
                                 ));
                           },
                         ),
@@ -394,7 +394,7 @@ class _ChildMissionScreenState extends State<ChildMissionScreen> {
               }
               if (state is MissionListSuccess) {
                 final missions =
-                    state.missionsByStatus[status]?.data.data ?? [];
+                    state.missionsByStatus[status]?.data?.data ?? [];
 
                 final top4Missions = missions.take(4).toList();
                 if (missions.isEmpty) {
@@ -580,10 +580,10 @@ class _ChildMissionScreenState extends State<ChildMissionScreen> {
                 return const Center(child: CircularProgressIndicator());
               }
               if (state is MissionHistoryListSuccess) {
-                final missions = state.response.data.data;
+                final missions = state.response.data?.data;
 
-                final top4Missions = missions.take(4).toList();
-                if (missions.isEmpty) {
+                final top4Missions = missions?.take(4).toList();
+                if (missions == null || missions!.isEmpty) {
                   return Center(
                     child: Text(
                       'Tidak ada misi.',
@@ -598,9 +598,9 @@ class _ChildMissionScreenState extends State<ChildMissionScreen> {
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: top4Missions.length,
+                        itemCount: top4Missions?.length,
                         itemBuilder: (context, index) {
-                          final mission = top4Missions[index];
+                          final mission = top4Missions?[index];
                           return Container(
                             margin: EdgeInsets.only(bottom: 8.h),
                             padding: EdgeInsets.all(8.w),
@@ -624,7 +624,7 @@ class _ChildMissionScreenState extends State<ChildMissionScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        mission.name ?? 'Judul tidak tersedia',
+                                        mission?.name ?? 'Judul tidak tersedia',
                                         style: blackTextStyle.copyWith(
                                           fontSize: 15.sp,
                                           fontWeight: FontWeight.w400,
@@ -632,7 +632,7 @@ class _ChildMissionScreenState extends State<ChildMissionScreen> {
                                       ),
                                       SizedBox(height: 4.h),
                                       Text(
-                                        "Periode: ${mission.periodeTime ?? 'N/A'}",
+                                        "Periode: ${mission?.periodeTime ?? 'N/A'}",
                                         style: blackTextStyle.copyWith(
                                           fontSize: 10.sp,
                                           fontWeight: FontWeight.w300,

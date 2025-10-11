@@ -244,9 +244,10 @@ class _EditRewardScreenState extends State<EditRewardScreen> {
                       if (state is MissionListSuccess) {
                         setState(() {
                           missions =
-                              state.missionsByStatus["active"]?.data.data ?? [];
+                              state.missionsByStatus["active"]?.data?.data ??
+                                  [];
                           _nextCursor = state
-                              .missionsByStatus["active"]?.data.nextCursor
+                              .missionsByStatus["active"]?.data?.nextCursor
                               ?.toString();
                           _isFetchingMore = false;
                         });
@@ -602,7 +603,7 @@ class _EditRewardScreenState extends State<EditRewardScreen> {
                                         },
                                       ),
                                     );
-                                  } else if (state is RewardPunishmentError) {
+                                  } else if (state is UpdateRewardError) {
                                     showDialog(
                                       context: context,
                                       barrierDismissible: false,
@@ -731,7 +732,7 @@ class _EditRewardScreenState extends State<EditRewardScreen> {
                                             );
                                           }),
                                     );
-                                  } else if (state is RewardPunishmentError) {
+                                  } else if (state is DeleteRewardError) {
                                     showDialog(
                                       context: context,
                                       barrierDismissible: false,

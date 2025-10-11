@@ -1,19 +1,21 @@
 class CreateChildProfileResponse {
-  final String status;
-  final String message;
-  final ChildProfile data;
+  final String? status;
+  final String? message;
+  final ChildProfile? data;
 
   CreateChildProfileResponse({
-    required this.status,
-    required this.message,
-    required this.data,
+    this.status,
+    this.message,
+    this.data,
   });
 
   factory CreateChildProfileResponse.fromJson(Map<String, dynamic> json) {
     return CreateChildProfileResponse(
-      status: json['status'],
-      message: json['message'],
-      data: ChildProfile.fromJson(json['data']),
+      status: json['status'] as String?,
+      message: json['message'] as String?,
+      data: json['data'] != null
+          ? ChildProfile.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -21,45 +23,45 @@ class CreateChildProfileResponse {
     return {
       'status': status,
       'message': message,
-      'data': data.toJson(),
+      'data': data?.toJson(),
     };
   }
 }
 
 class ChildProfile {
-  final String name;
-  final String dateOfBirth;
-  final String gender;
-  final String liveWithParents;
-  final String grade;
-  final String school;
-  final int userId;
-  final int parentId;
-  final int id;
+  final String? name;
+  final String? dateOfBirth;
+  final String? gender;
+  final String? liveWithParents;
+  final String? grade;
+  final String? school;
+  final int? userId;
+  final int? parentId;
+  final int? id;
 
   ChildProfile({
-    required this.name,
-    required this.dateOfBirth,
-    required this.gender,
-    required this.liveWithParents,
-    required this.grade,
-    required this.school,
-    required this.userId,
-    required this.parentId,
-    required this.id,
+    this.name,
+    this.dateOfBirth,
+    this.gender,
+    this.liveWithParents,
+    this.grade,
+    this.school,
+    this.userId,
+    this.parentId,
+    this.id,
   });
 
   factory ChildProfile.fromJson(Map<String, dynamic> json) {
     return ChildProfile(
-      name: json['name'],
-      dateOfBirth: json['date_of_birth'],
-      gender: json['gender'],
-      liveWithParents: json['live_with_parents'],
-      grade: json['grade'],
-      school: json['school'],
-      userId: json['user_id'],
-      parentId: json['parent_id'],
-      id: json['id'],
+      name: json['name'] as String?,
+      dateOfBirth: json['date_of_birth'] as String?,
+      gender: json['gender'] as String?,
+      liveWithParents: json['live_with_parents'] as String?,
+      grade: json['grade'] as String?,
+      school: json['school'] as String?,
+      userId: json['user_id'] as int?,
+      parentId: json['parent_id'] as int?,
+      id: json['id'] as int?,
     );
   }
 

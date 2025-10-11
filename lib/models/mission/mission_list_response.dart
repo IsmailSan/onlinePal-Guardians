@@ -1,49 +1,51 @@
 class MissionListResponse {
   final String status;
   final String message;
-  final MissionData data;
+  final MissionData? data;
 
   MissionListResponse({
     required this.status,
     required this.message,
-    required this.data,
+    this.data,
   });
 
   factory MissionListResponse.fromJson(Map<String, dynamic> json) {
     return MissionListResponse(
-      status: json['status'],
-      message: json['message'],
-      data: MissionData.fromJson(json['data']),
+      status: json['status'] ?? '',
+      message: json['message'] ?? '',
+      data: json['data'] != null ? MissionData.fromJson(json['data']) : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
         'status': status,
         'message': message,
-        'data': data.toJson(),
+        'data': data?.toJson(),
       };
 }
 
 class MissionData {
-  final List<Mission> data;
+  final List<Mission>? data;
   final int? nextCursor;
 
   MissionData({
-    required this.data,
+    this.data,
     this.nextCursor,
   });
 
   factory MissionData.fromJson(Map<String, dynamic> json) {
     return MissionData(
       data: json['data'] != null
-          ? List<Mission>.from(json['data'].map((x) => Mission.fromJson(x)))
-          : <Mission>[], // fallback: kalau null, jadikan list kosong
-      nextCursor: json['next_cursor'],
+          ? List<Mission>.from(
+              (json['data'] as List).map((x) => Mission.fromJson(x)),
+            )
+          : null,
+      nextCursor: _parseInt(json['next_cursor']),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'data': List<dynamic>.from(data.map((x) => x.toJson())),
+        'data': data?.map((x) => x.toJson()).toList(),
         'next_cursor': nextCursor,
       };
 }
@@ -85,26 +87,24 @@ class Mission {
     this.updatedAt,
   });
 
-  factory Mission.fromJson(Map<String, dynamic> json) {
-    return Mission(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      periodeTime: json['periode_time'],
-      startDate: json['start_date'],
-      endDate: json['end_date'],
-      type: json['type'],
-      condition: json['condition'],
-      appCategory: json['app_category'],
-      appName: json['app_name'],
-      missionSuggestionsId: json['mission_suggestions_id'],
-      parentId: json['parent_id'],
-      childrenId: json['children_id'],
-      status: json['status'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-    );
-  }
+  factory Mission.fromJson(Map<String, dynamic> json) => Mission(
+        id: _parseInt(json['id']),
+        name: json['name'] as String?,
+        description: json['description'] as String?,
+        periodeTime: json['periode_time'] as String?,
+        startDate: json['start_date'] as String?,
+        endDate: json['end_date'] as String?,
+        type: json['type'] as String?,
+        condition: json['condition'] as String?,
+        appCategory: json['app_category'] as String?,
+        appName: json['app_name'] as String?,
+        missionSuggestionsId: _parseInt(json['mission_suggestions_id']),
+        parentId: _parseInt(json['parent_id']),
+        childrenId: _parseInt(json['children_id']),
+        status: json['status'] as String?,
+        createdAt: json['created_at'] as String?,
+        updatedAt: json['updated_at'] as String?,
+      );
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -124,4 +124,12 @@ class Mission {
         'created_at': createdAt,
         'updated_at': updatedAt,
       };
+}
+
+/// Helper supaya parsing int aman
+int? _parseInt(dynamic value) {
+  if (value == null) return null;
+  if (value is int) return value;
+  if (value is String) return int.tryParse(value);
+  return null;
 }

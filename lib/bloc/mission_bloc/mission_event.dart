@@ -31,7 +31,7 @@ class GetAppList extends MissionEvent {
   final bool isRefresh;
 
   const GetAppList({
-    this.limit = 200,
+    this.limit = 100,
     this.cursor = 0,
     this.appCategoryId = 0,
     this.isRefresh = false,

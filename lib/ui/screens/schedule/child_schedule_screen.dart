@@ -99,29 +99,33 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
 
   void populateActivities(List<Schedule> items, DateTime startOfWeek) {
     for (var item in items) {
-      final start = _parseDateTime(item.date, item.timeStart);
-      final end = _parseDateTime(item.date, item.timeEnd);
+      final start = _parseDateTime(item.date ?? "", item.timeStart ?? "");
+      final end = _parseDateTime(item.date ?? "", item.timeEnd ?? "");
 
       int dayIndex = start.difference(startOfWeek).inDays;
-      int hourIndex = start.hour;
 
-      if (dayIndex >= 0 && dayIndex < 7 && hourIndex >= 0 && hourIndex < 24) {
-        activityGrid[hourIndex][dayIndex] = Schedule(
-          id: item.id,
-          date: item.date,
-          timeStart: item.timeStart,
-          timeEnd: item.timeEnd,
-          scheduleItemId: item.scheduleItemId,
-          customCategory: item.customCategory,
-          customIcon: item.customIcon,
-          customColor: item.customColor,
-          notes: item.notes,
-          createdById: item.createdById,
-          customName: item.customName ?? "-",
-          createdAt: item.createdAt ?? "",
-          childrenId: item.childrenId,
-          updatedAt: item.updatedAt,
-        );
+      if (dayIndex >= 0 && dayIndex < 7) {
+        // Loop dari jam mulai sampai jam selesai
+        for (int hour = start.hour; hour <= end.hour; hour++) {
+          if (hour >= 0 && hour < 24) {
+            activityGrid[hour][dayIndex] = Schedule(
+              id: item.id,
+              date: item.date,
+              timeStart: item.timeStart,
+              timeEnd: item.timeEnd,
+              scheduleItemId: item.scheduleItemId,
+              customCategory: item.customCategory,
+              customIcon: item.customIcon,
+              customColor: item.customColor,
+              notes: item.notes,
+              createdById: item.createdById,
+              customName: item.customName ?? "-",
+              createdAt: item.createdAt ?? "",
+              childrenId: item.childrenId,
+              updatedAt: item.updatedAt,
+            );
+          }
+        }
       }
     }
   }
@@ -277,7 +281,7 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
                             final dates = getFormattedDateStartAndEnd();
 
                             context.read<ScheduleBloc>().add(GetScheduleList(
-                                  childrenId: profile.userId,
+                                  childrenId: profile.userId ?? 0,
                                   dateStart: dates['dateStart']!,
                                   dateEnd: dates['dateEnd']!,
                                 ));
@@ -318,7 +322,7 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
                             if (selectedProfile != null) {
                               context.read<ScheduleBloc>().add(
                                     GetScheduleList(
-                                      childrenId: selectedProfile!.userId,
+                                      childrenId: selectedProfile?.userId ?? 0,
                                       dateStart: dates['dateStart']!,
                                       dateEnd: dates['dateEnd']!,
                                     ),
@@ -365,7 +369,7 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
                             if (selectedProfile != null) {
                               context.read<ScheduleBloc>().add(
                                     GetScheduleList(
-                                      childrenId: selectedProfile!.userId,
+                                      childrenId: selectedProfile?.userId ?? 0,
                                       dateStart: dates['dateStart']!,
                                       dateEnd: dates['dateEnd']!,
                                     ),
@@ -391,7 +395,8 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
                       final startOfWeek = getStartOfWeekForCurrentIndex();
                       clearActivityGrid();
                       populateActivities(
-                          state.scheduleListResponse.data.data, startOfWeek);
+                          state.scheduleListResponse.data?.data ?? [],
+                          startOfWeek);
                     }
 
                     return Expanded(
@@ -470,8 +475,8 @@ class _ChildScheduleScreenState extends State<ChildScheduleScreen> {
                                                   lastUpdate: formatLastUpdate(
                                                       data?.updatedAt ?? "",
                                                       childName),
-                                                  scheduleId: data!.id,
-                                                  schedule: data);
+                                                  scheduleId: data?.id ?? 0,
+                                                  schedule: data ?? Schedule());
                                             },
                                             child: Container(
                                               width: 80.w,

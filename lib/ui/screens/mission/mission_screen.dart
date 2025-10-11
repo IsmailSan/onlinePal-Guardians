@@ -33,26 +33,24 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
   void initState() {
     super.initState();
 
-    _scrollController = ScrollController()
-      ..addListener(_onScroll);
+    _scrollController = ScrollController()..addListener(_onScroll);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final profile = await SessionHelper().getChildProfile();
       final childUserId = profile?.userId;
 
-      context
-          .read<MissionBloc>()
-          .add(MissionInitialized());
-      if(childUserId != null) {
-        context
-            .read<MissionBloc>()
-            .add(GetMissions(childrenId: childUserId, status: widget.status ?? ""));
+      context.read<MissionBloc>().add(MissionInitialized());
+      if (childUserId != null) {
+        context.read<MissionBloc>().add(
+            GetMissions(childrenId: childUserId, status: widget.status ?? ""));
       }
     });
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100 && !_isFetchingMore) {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 100 &&
+        !_isFetchingMore) {
       final bloc = context.read<MissionBloc>();
       final state = bloc.state;
 
@@ -76,7 +74,6 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
       }
     }
   }
-
 
   String _getRouteFromStatus(String status) {
     switch (status) {
@@ -118,10 +115,10 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                       widget.status == "active"
                           ? "Misi Aktif"
                           : widget.status == "completed"
-                          ? "Riwayat Misi"
-                          : widget.status == "waiting"
-                          ? "Misi Menunggu Konfirmasi"
-                          : "Buat Misi Baru",
+                              ? "Riwayat Misi"
+                              : widget.status == "waiting"
+                                  ? "Misi Menunggu Konfirmasi"
+                                  : "Buat Misi Baru",
                       style: blackTextStyle.copyWith(
                           fontSize: 20.sp, fontWeight: bold, fontStyle: italic),
                     ),
@@ -168,7 +165,9 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                     },
                     builder: (context, state) {
                       if (state is MissionListSuccess) {
-                        final missions = state.missionsByStatus[widget.status]?.data.data ?? [];
+                        final missions =
+                            state.missionsByStatus[widget.status]?.data?.data ??
+                                [];
 
                         if (missions.isEmpty) {
                           return Center(
@@ -184,11 +183,16 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                           itemCount: missions.length + 1,
                           itemBuilder: (context, index) {
                             if (index == missions.length) {
-                              final nextCursor = state.missionsByStatus[widget.status]?.data.nextCursor;
-                              if (nextCursor != null && nextCursor.toString().isNotEmpty) {
+                              final nextCursor = state
+                                  .missionsByStatus[widget.status]
+                                  ?.data
+                                  ?.nextCursor;
+                              if (nextCursor != null &&
+                                  nextCursor.toString().isNotEmpty) {
                                 return Padding(
                                   padding: const EdgeInsets.all(16.0),
-                                  child: Center(child: CircularProgressIndicator()),
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
                                 );
                               } else {
                                 return const SizedBox.shrink();
@@ -197,7 +201,8 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
 
                             final mission = missions[index];
                             return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
                               child: Container(
                                 padding: EdgeInsets.all(12),
                                 decoration: BoxDecoration(
@@ -211,16 +216,20 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                                   children: [
                                     Text(
                                       "${index + 1}.",
-                                      style: blackTextStyle.copyWith(fontSize: 15.sp),
+                                      style: blackTextStyle.copyWith(
+                                          fontSize: 15.sp),
                                     ),
                                     SizedBox(width: 8),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            mission.name ?? 'Judul tidak tersedia',
-                                            style: blackTextStyle.copyWith(fontSize: 15.sp),
+                                            mission.name ??
+                                                'Judul tidak tersedia',
+                                            style: blackTextStyle.copyWith(
+                                                fontSize: 15.sp),
                                           ),
                                           SizedBox(height: 4),
                                           Text(

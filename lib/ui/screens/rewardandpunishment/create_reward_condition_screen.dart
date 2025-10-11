@@ -9,6 +9,7 @@ import 'package:online_pal_guardians/shared/theme.dart';
 import 'package:online_pal_guardians/ui/screens/rewardandpunishment/dialog/confirm_action_dialog.dart';
 import 'package:online_pal_guardians/ui/screens/rewardandpunishment/modal/mission_selector_modal.dart';
 import 'package:online_pal_guardians/ui/screens/rewardandpunishment/reward_punishment_ideas_screen.dart';
+import 'package:online_pal_guardians/ui/screens/rewardandpunishment/reward_punishment_screen.dart';
 import 'package:online_pal_guardians/ui/widgets/child_profile_selector.dart';
 import 'package:online_pal_guardians/ui/widgets/custom_form_field.dart';
 import 'package:online_pal_guardians/ui/widgets/dropdown_list_field.dart';
@@ -190,7 +191,7 @@ class _CreateRewardConditionScreenState
                                   .read<MissionBloc>()
                                   .add(MissionInitialized());
                               context.read<MissionBloc>().add(GetMissions(
-                                    childrenId: profile.userId,
+                                    childrenId: profile.userId ?? 0,
                                     status: "active",
                                   ));
                             },
@@ -223,9 +224,10 @@ class _CreateRewardConditionScreenState
                       if (state is MissionListSuccess) {
                         setState(() {
                           missions =
-                              state.missionsByStatus["active"]?.data.data ?? [];
+                              state.missionsByStatus["active"]?.data?.data ??
+                                  [];
                           _nextCursor = state
-                              .missionsByStatus["active"]?.data.nextCursor
+                              .missionsByStatus["active"]?.data?.nextCursor
                               ?.toString();
                           _isFetchingMore = false;
                         });
@@ -545,48 +547,51 @@ class _CreateRewardConditionScreenState
                                 },
                               ),
                               SizedBox(height: 10.h),
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          "Bingung mengenai bentuk/jenis hadiah untuk diberikan?\n",
-                                      style: blackTextStyle.copyWith(
-                                        fontSize: 14.sp,
-                                        fontWeight: medium,
-                                        fontStyle: FontStyle.italic,
-                                        decoration: TextDecoration.underline,
-                                        color: purpleColor, // agar mirip link
+                              Visibility(
+                                visible: false,
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "Bingung mengenai bentuk/jenis hadiah untuk diberikan?\n",
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 14.sp,
+                                          fontWeight: medium,
+                                          fontStyle: FontStyle.italic,
+                                          decoration: TextDecoration.underline,
+                                          color: purpleColor, // agar mirip link
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const RewardPunishmentIdeasScreen()));
+                                          },
                                       ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const RewardPunishmentIdeasScreen()));
-                                        },
-                                    ),
-                                    TextSpan(
-                                      text:
-                                          "Klik disini untuk melihat inspirasi hadiah/hukuman dari kami!",
-                                      style: blackTextStyle.copyWith(
-                                        fontSize: 14.sp,
-                                        fontWeight: medium,
-                                        fontStyle: FontStyle.italic,
-                                        decoration: TextDecoration.underline,
-                                        color: purpleColor,
+                                      TextSpan(
+                                        text:
+                                            "Klik disini untuk melihat inspirasi hadiah/hukuman dari kami!",
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 14.sp,
+                                          fontWeight: medium,
+                                          fontStyle: FontStyle.italic,
+                                          decoration: TextDecoration.underline,
+                                          color: purpleColor,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const RewardPunishmentIdeasScreen()));
+                                          },
                                       ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const RewardPunishmentIdeasScreen()));
-                                        },
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 20.h),
@@ -615,9 +620,17 @@ class _CreateRewardConditionScreenState
                                       barrierDismissible: false,
                                       builder: (_) => SuccessDialog(
                                           message:
-                                              'Kondisi hadiah berhasil ditambahkan'),
+                                              'Kondisi hadiah berhasil ditambahkan',
+                                          onOk: () {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const RewardPunishmentScreen()),
+                                            );
+                                          }),
                                     );
-                                  } else if (state is RewardPunishmentError) {
+                                  } else if (state is CreateRewardError) {
                                     showDialog(
                                       context: context,
                                       barrierDismissible: false,

@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:online_pal_guardians/ui/screens/avatar/avatar_collection_screen.dart';
 import 'package:online_pal_guardians/ui/widgets/dropdown_list_field.dart';
 import 'package:online_pal_guardians/ui/widgets/custom_form_field.dart';
+import 'package:online_pal_guardians/ui/widgets/success_dialog.dart';
 import 'package:online_pal_guardians/utils/session_helper.dart';
 
 class ChildProfileScreen extends StatefulWidget {
@@ -39,7 +40,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedBirthDate,
-      firstDate: DateTime(2000),
+      firstDate: DateTime(1800),
       lastDate: DateTime(2101),
     );
     if (picked != null && picked != selectedBirthDate) {
@@ -55,7 +56,9 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final profile = await SessionHelper().getChildProfile();
+
       final id = profile?.id;
+      print("update child profile id $id");
 
       if (id != null) {
         setState(() {
@@ -128,22 +131,31 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
               child: BlocConsumer<ChildProfileBloc, ChildProfileState>(
                   listener: (context, state) {
                 if (state is GetChildProfileSuccess) {
+                  print("nama anak ${state.response.data?.name}");
                   nameController.text = nameController.text.isEmpty
-                      ? state.response.data.name
+                      ? (state.response.data?.name ?? "")
                       : nameController.text;
+
                   childGradeLevelController.text =
                       childGradeLevelController.text.isEmpty
-                          ? state.response.data.grade
+                          ? (state.response.data?.grade ?? "")
                           : childGradeLevelController.text;
+
                   schoolNameController.text = schoolNameController.text.isEmpty
-                      ? state.response.data.school
+                      ? (state.response.data?.school ?? "")
                       : schoolNameController.text;
-                  gender ??= state.response.data.gender;
-                  selectedBirthDate =
-                      DateTime.tryParse(state.response.data.dateOfBirth) ??
-                          selectedBirthDate;
-                  livingWithParents ??= state.response.data.liveWithParents;
+
+                  gender ??= state.response.data?.gender;
+
+                  selectedBirthDate = DateTime.tryParse(
+                          state.response.data?.dateOfBirth ?? "") ??
+                      selectedBirthDate;
+
+                  livingWithParents ??= state.response.data?.liveWithParents;
+
                   SessionHelper().saveChildGender(gender ?? "");
+                } else if (state is GetChildProfileError) {
+                  print("nama anak ${state.message}");
                 }
               }, builder: (context, state) {
                 return SingleChildScrollView(
@@ -298,7 +310,7 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                                       child: Text(
                                         'Ubah Avatar Anak',
                                         style: blackTextStyle.copyWith(
-                                            fontSize: 20.sp, fontWeight: bold),
+                                            fontSize: 18.sp, fontWeight: bold),
                                       ),
                                     ),
                                   ),
@@ -310,25 +322,41 @@ class _ChildProfileScreenState extends State<ChildProfileScreen> {
                                       final session = SessionHelper();
                                       session.setChildProfileFilled(true);
                                       session.saveProfileId(
-                                          state.response.data.id);
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              "Profil anak berhasil dibuat"),
-                                          backgroundColor: Colors.green,
-                                        ),
+                                          state.response.data?.id ?? 0);
+
+                                      // ScaffoldMessenger.of(context)
+                                      //     .showSnackBar(
+                                      //   const SnackBar(
+                                      //     content: Text(
+                                      //         "Profil anak berhasil dibuat"),
+                                      //     backgroundColor: Colors.green,
+                                      //   ),
+                                      // );
+
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (_) => SuccessDialog(
+                                            message:
+                                                'Profil anak berhasil dibuat'),
                                       );
                                     } else if (state
                                         is UpdateChildProfileSuccess) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              "Profil berhasil diperbarui"),
-                                          backgroundColor: Colors.green,
-                                        ),
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (_) => SuccessDialog(
+                                            message:
+                                                'Profil berhasil diperbarui'),
                                       );
+                                      // ScaffoldMessenger.of(context)
+                                      //     .showSnackBar(
+                                      //   const SnackBar(
+                                      //     content: Text(
+                                      //         "Profil berhasil diperbarui"),
+                                      //     backgroundColor: Colors.green,
+                                      //   ),
+                                      // );
                                     } else if (state is ChildProfileError) {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(

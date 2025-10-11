@@ -1,19 +1,21 @@
 class UpdateChildProfileResponse {
-  final String status;
-  final String message;
-  final ChildProfile data;
+  final String? status;
+  final String? message;
+  final ChildProfile? data;
 
   UpdateChildProfileResponse({
-    required this.status,
-    required this.message,
-    required this.data,
+    this.status,
+    this.message,
+    this.data,
   });
 
   factory UpdateChildProfileResponse.fromJson(Map<String, dynamic> json) {
     return UpdateChildProfileResponse(
-      status: json['status'],
-      message: json['message'],
-      data: ChildProfile.fromJson(json['data']),
+      status: json['status'] as String?,
+      message: json['message'] as String?,
+      data: json['data'] != null
+          ? ChildProfile.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -21,60 +23,67 @@ class UpdateChildProfileResponse {
     return {
       'status': status,
       'message': message,
-      'data': data.toJson(),
+      'data': data?.toJson(),
     };
   }
 }
 
 class ChildProfile {
-  final int id;
-  final String name;
-  final String dateOfBirth;
-  final String gender;
-  final String liveWithParents;
-  final String grade;
-  final String school;
-  final List<dynamic> favoritePhysicalActivities;
-  final List<dynamic> hobbies;
-  final List<dynamic> favoriteFamilyActivities;
-  final List<dynamic> favoriteOnlineActivities;
-  final int userId;
-  final int parentId;
+  final int? id;
+  final String? name;
+  final String? dateOfBirth;
+  final String? gender;
+  final String? liveWithParents;
+  final String? grade;
+  final String? school;
+  final List<dynamic>? favoritePhysicalActivities;
+  final List<dynamic>? hobbies;
+  final List<dynamic>? favoriteFamilyActivities;
+  final List<dynamic>? favoriteOnlineActivities;
+  final int? userId;
+  final int? parentId;
   final int? avatarId;
 
   ChildProfile({
-    required this.id,
-    required this.name,
-    required this.dateOfBirth,
-    required this.gender,
-    required this.liveWithParents,
-    required this.grade,
-    required this.school,
-    required this.favoritePhysicalActivities,
-    required this.hobbies,
-    required this.favoriteFamilyActivities,
-    required this.favoriteOnlineActivities,
-    required this.userId,
-    required this.parentId,
+    this.id,
+    this.name,
+    this.dateOfBirth,
+    this.gender,
+    this.liveWithParents,
+    this.grade,
+    this.school,
+    this.favoritePhysicalActivities,
+    this.hobbies,
+    this.favoriteFamilyActivities,
+    this.favoriteOnlineActivities,
+    this.userId,
+    this.parentId,
     this.avatarId,
   });
 
   factory ChildProfile.fromJson(Map<String, dynamic> json) {
     return ChildProfile(
-      id: json['id'],
-      name: json['name'],
-      dateOfBirth: json['date_of_birth'],
-      gender: json['gender'],
-      liveWithParents: json['live_with_parents'],
-      grade: json['grade'],
-      school: json['school'],
-      favoritePhysicalActivities: List<dynamic>.from(json['favorite_physical_activities'] ?? []),
-      hobbies: List<dynamic>.from(json['hobbies'] ?? []),
-      favoriteFamilyActivities: List<dynamic>.from(json['favorite_family_activities'] ?? []),
-      favoriteOnlineActivities: List<dynamic>.from(json['favorite_online_activities'] ?? []),
-      userId: json['user_id'],
-      parentId: json['parent_id'],
-      avatarId: json['avatar_id'],
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+      dateOfBirth: json['date_of_birth'] as String?,
+      gender: json['gender'] as String?,
+      liveWithParents: json['live_with_parents'] as String?,
+      grade: json['grade'] as String?,
+      school: json['school'] as String?,
+      favoritePhysicalActivities: json['favorite_physical_activities'] != null
+          ? List<dynamic>.from(json['favorite_physical_activities'])
+          : [],
+      hobbies:
+          json['hobbies'] != null ? List<dynamic>.from(json['hobbies']) : [],
+      favoriteFamilyActivities: json['favorite_family_activities'] != null
+          ? List<dynamic>.from(json['favorite_family_activities'])
+          : [],
+      favoriteOnlineActivities: json['favorite_online_activities'] != null
+          ? List<dynamic>.from(json['favorite_online_activities'])
+          : [],
+      userId: json['user_id'] as int?,
+      parentId: json['parent_id'] as int?,
+      avatarId: json['avatar_id'] as int?,
     );
   }
 

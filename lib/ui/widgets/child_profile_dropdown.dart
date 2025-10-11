@@ -82,7 +82,7 @@ class ChildProfileDropdown extends StatelessWidget {
                                                 MainAxisAlignment.start,
                                             children: [
                                               Text(
-                                                profile.name,
+                                                profile.name ?? "",
                                                 style: blackTextStyle.copyWith(
                                                     fontSize: 12.sp),
                                               ),

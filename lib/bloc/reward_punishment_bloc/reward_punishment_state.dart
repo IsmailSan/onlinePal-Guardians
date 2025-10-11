@@ -86,7 +86,6 @@ class UpdatePunishmentStatusSuccess extends RewardPunishmentState {
   List<Object?> get props => [response];
 }
 
-
 class CreatePunishmentSuccess extends RewardPunishmentState {
   final CreatePunishmentResponse response;
 
@@ -163,6 +162,60 @@ class RewardPunishmentError extends RewardPunishmentState {
   final String message;
 
   const RewardPunishmentError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class CreateRewardError extends RewardPunishmentState {
+  final String message;
+
+  const CreateRewardError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class UpdateRewardError extends RewardPunishmentState {
+  final String message;
+
+  const UpdateRewardError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class DeleteRewardError extends RewardPunishmentState {
+  final String message;
+
+  const DeleteRewardError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class CreatePunishmentError extends RewardPunishmentState {
+  final String message;
+
+  const CreatePunishmentError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class UpdatePunishmentError extends RewardPunishmentState {
+  final String message;
+
+  const UpdatePunishmentError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class DeletePunishmentError extends RewardPunishmentState {
+  final String message;
+
+  const DeletePunishmentError(this.message);
 
   @override
   List<Object?> get props => [message];

@@ -126,41 +126,41 @@ class _GuardianProfileScreenState extends State<GuardianProfileScreen> {
                         listener: (context, state) {
                   if (state is GetProfileSuccess) {
                     nameController.text = nameController.text.isEmpty
-                        ? state.getProfileResponse.data.name ?? ''
+                        ? state.getProfileResponse.data?.name ?? ''
                         : nameController.text;
                     nationalityController.text =
                         nationalityController.text.isEmpty
-                            ? state.getProfileResponse.data.nationality ?? ''
+                            ? state.getProfileResponse.data?.nationality ?? ''
                             : nationalityController.text;
                     provinceController.text = provinceController.text.isEmpty
-                        ? state.getProfileResponse.data.province ?? ''
+                        ? state.getProfileResponse.data?.province ?? ''
                         : provinceController.text;
                     cityController.text = cityController.text.isEmpty
-                        ? state.getProfileResponse.data.city ?? ''
+                        ? state.getProfileResponse.data?.city ?? ''
                         : cityController.text;
                     postalCodeController.text =
                         postalCodeController.text.isEmpty
-                            ? state.getProfileResponse.data.postalCode ?? ''
+                            ? state.getProfileResponse.data?.postalCode ?? ''
                             : postalCodeController.text;
                     jobController.text = jobController.text.isEmpty
-                        ? state.getProfileResponse.data.occupation ?? ''
+                        ? state.getProfileResponse.data?.occupation ?? ''
                         : jobController.text;
                     familyIncomeRangeController.text =
                         familyIncomeRangeController.text.isEmpty
                             ? state.getProfileResponse.data
-                                    .rangeOfFamilyIncome ??
+                                    ?.rangeOfFamilyIncome ??
                                 ''
                             : familyIncomeRangeController.text;
                     numberOfChildrenController.text =
                         numberOfChildrenController.text.isEmpty
-                            ? (state.getProfileResponse.data.numberOfChildren
+                            ? (state.getProfileResponse.data?.numberOfChildren
                                     .toString() ??
                                 '')
                             : numberOfChildrenController.text;
-                    gender ??= state.getProfileResponse.data.gender;
+                    gender ??= state.getProfileResponse.data?.gender ?? "";
                     SessionHelper().saveGender(gender ?? "");
                     selectedBirthDate = DateTime.tryParse(
-                            state.getProfileResponse.data.dateOfBirth ?? '') ??
+                            state.getProfileResponse.data?.dateOfBirth ?? '') ??
                         selectedBirthDate;
                   } else if (state is GetProfileError) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -360,7 +360,7 @@ class _GuardianProfileScreenState extends State<GuardianProfileScreen> {
                                         child: Text(
                                           'Ubah Avatar',
                                           style: blackTextStyle.copyWith(
-                                              fontSize: 20.sp,
+                                              fontSize: 18.sp,
                                               fontWeight: bold),
                                         ),
                                       ),

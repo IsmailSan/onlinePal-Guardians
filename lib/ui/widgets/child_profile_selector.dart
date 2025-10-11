@@ -43,7 +43,8 @@ class _ChildProfileSelectorState extends State<ChildProfileSelector> {
   void _setAndSaveSelectedProfileId(ChildProfile childProfile) {
     SessionHelper().saveChildProfile(childProfile);
 
-    final profile = profiles.firstWhere((p) => p.id == childProfile.id, orElse: () => profiles.first);
+    final profile = profiles.firstWhere((p) => p.id == childProfile.id,
+        orElse: () => profiles.first);
 
     setState(() {
       selectedProfileId = childProfile.id;
@@ -59,7 +60,7 @@ class _ChildProfileSelectorState extends State<ChildProfileSelector> {
       buildWhen: (previous, current) => current is GetChildrenProfileSuccess,
       builder: (context, state) {
         if (state is GetChildrenProfileSuccess) {
-          profiles = state.response.data;
+          profiles = state.response.data ?? [];
 
           if (!hasInitializedProfile && profiles.isNotEmpty) {
             selectedProfile = profiles.first;
@@ -91,4 +92,3 @@ class _ChildProfileSelectorState extends State<ChildProfileSelector> {
     );
   }
 }
-

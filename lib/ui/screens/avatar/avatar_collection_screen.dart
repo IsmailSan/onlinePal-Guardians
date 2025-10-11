@@ -51,9 +51,7 @@ class _AvatarCollectionScreenState extends State<AvatarCollectionScreen> {
     if (widget.isParent) {
       context.read<AvatarBloc>().add(GetAvatarList(gender: parentGenderToUse));
     } else {
-      context
-          .read<ChildProfileBloc>()
-          .add(GetChildAvatarList(gender: childGenderToUse));
+      context.read<ChildProfileBloc>().add(GetChildAvatarList(gender: ''));
     }
     print("avatar nya ${widget.isParent}");
   }
@@ -137,7 +135,10 @@ class _AvatarCollectionScreenState extends State<AvatarCollectionScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const MainScreen()),
+                                    builder: (context) =>
+                                        const AvatarCollectionScreen(
+                                          isParent: false,
+                                        )),
                               );
                             }
                           }
@@ -172,6 +173,12 @@ class _AvatarCollectionScreenState extends State<AvatarCollectionScreen> {
                                 builder: (_) => SuccessDialog(
                                     message: 'Avatar Anak Berhasil Diperbarui'),
                               );
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MainScreen()),
+                              );
                             }
                           }
                         }, builder: (context, state) {
@@ -198,7 +205,12 @@ class _AvatarCollectionScreenState extends State<AvatarCollectionScreen> {
                               : () async {
                                   final profile =
                                       await SessionHelper().getChildProfile();
-                                  final childProfileId = profile?.id ?? 0;
+                                  final registeredProfileId =
+                                      await SessionHelper().getProfileId();
+                                  final childProfileId =
+                                      profile?.id ?? registeredProfileId;
+                                  print(
+                                      "child profile id $registeredProfileId");
                                   widget.isParent
                                       ? context.read<AvatarBloc>().add(
                                           UpdateAvatar(
@@ -206,7 +218,8 @@ class _AvatarCollectionScreenState extends State<AvatarCollectionScreen> {
                                       : context.read<ChildProfileBloc>().add(
                                           UpdateChildAvatar(
                                               avatarId: selectedAvatarId ?? 0,
-                                              childProfileId: childProfileId));
+                                              childProfileId:
+                                                  childProfileId ?? 0));
                                 },
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Colors.black),
@@ -231,7 +244,7 @@ class _AvatarCollectionScreenState extends State<AvatarCollectionScreen> {
             ),
             BlocBuilder<AvatarBloc, AvatarState>(
               builder: (context, state) {
-                if (state is AvatarLoading) {
+                if (state is AvatarLoading || state is ChildProfileLoading) {
                   return Container(
                     color: Colors.black.withOpacity(0.3),
                     child: const LoadingDialog(),

@@ -115,15 +115,15 @@ class _UsageMonitoringScreenState extends State<UsageMonitoringScreen> {
                     Row(
                       children: [
                         ChildProfileSelector(
-                            // onProfileChanged: (profile) {
-                            //   SessionHelper().saveChildProfile(profile);
-                            //   context
-                            //       .read<MonitoringBloc>()
-                            //       .add(MonitoringEventInitialized());
-                            //   context.read<MonitoringBloc>().add(
-                            //       GetMonitoringCombined("${profile.userId}"));
-                            // },
-                            ),
+                          onProfileChanged: (profile) {
+                            SessionHelper().saveChildProfile(profile);
+                            context
+                                .read<MonitoringBloc>()
+                                .add(MonitoringEventInitialized());
+                            context.read<MonitoringBloc>().add(
+                                GetMonitoringCombined("${profile.userId}"));
+                          },
+                        ),
                         SizedBox(width: 14.w),
                         MoreOptionsDropdown(),
                       ],

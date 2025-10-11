@@ -3,29 +3,31 @@ import 'dart:convert';
 class CreateScheduleResponse {
   final String status;
   final String message;
-  final List<ScheduleItem> data;
+  final List<ScheduleItem>? data;
 
   CreateScheduleResponse({
     required this.status,
     required this.message,
-    required this.data,
+    this.data,
   });
 
   factory CreateScheduleResponse.fromJson(Map<String, dynamic> json) {
     return CreateScheduleResponse(
-      status: json['status'],
-      message: json['message'],
-      data: List<ScheduleItem>.from(
-        json['data'].map((x) => ScheduleItem.fromJson(x)),
-      ),
+      status: json['status'] ?? '',
+      message: json['message'] ?? '',
+      data: json['data'] != null
+          ? List<ScheduleItem>.from(
+              (json['data'] as List).map((x) => ScheduleItem.fromJson(x)),
+            )
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'status': status,
-    'message': message,
-    'data': List<dynamic>.from(data.map((x) => x.toJson())),
-  };
+        'status': status,
+        'message': message,
+        'data': data?.map((x) => x.toJson()).toList(),
+      };
 
   static CreateScheduleResponse fromRawJson(String str) =>
       CreateScheduleResponse.fromJson(json.decode(str));
@@ -34,9 +36,9 @@ class CreateScheduleResponse {
 }
 
 class ScheduleItem {
-  final String date;
-  final String timeStart;
-  final String timeEnd;
+  final String? date;
+  final String? timeStart;
+  final String? timeEnd;
   final int? scheduleItemId;
   final String? customName;
   final String? customCategory;
@@ -49,9 +51,9 @@ class ScheduleItem {
   final int? id;
 
   ScheduleItem({
-    required this.date,
-    required this.timeStart,
-    required this.timeEnd,
+    this.date,
+    this.timeStart,
+    this.timeEnd,
     this.scheduleItemId,
     this.customName,
     this.customCategory,
@@ -65,35 +67,34 @@ class ScheduleItem {
   });
 
   factory ScheduleItem.fromJson(Map<String, dynamic> json) => ScheduleItem(
-    date: json['date'] ?? '',
-    timeStart: json['time_start'] ?? '',
-    timeEnd: json['time_end'] ?? '',
-    scheduleItemId: json['schedule_item_id'],
-    customName: json['custom_name'],
-    customCategory: json['custom_category'],
-    customIcon: json['custom_icon'],
-    customColor: json['custom_color'],
-    createdById: json['created_by_id'],
-    childrenId: int.tryParse(json['children_id']?.toString() ?? '') ?? null,
-    updatedAt: json['updated_at'],
-    createdAt: json['created_at'],
-    id: json['id'],
-  );
+        date: json['date'] as String?,
+        timeStart: json['time_start'] as String?,
+        timeEnd: json['time_end'] as String?,
+        scheduleItemId: json['schedule_item_id'] as int?,
+        customName: json['custom_name'] as String?,
+        customCategory: json['custom_category'] as String?,
+        customIcon: json['custom_icon'] as String?,
+        customColor: json['custom_color'] as String?,
+        createdById: json['created_by_id'] as int?,
+        childrenId: int.tryParse(json['children_id']?.toString() ?? ''),
+        updatedAt: json['updated_at'] as String?,
+        createdAt: json['created_at'] as String?,
+        id: json['id'] as int?,
+      );
 
   Map<String, dynamic> toJson() => {
-    'date': date,
-    'time_start': timeStart,
-    'time_end': timeEnd,
-    'schedule_item_id': scheduleItemId,
-    'custom_name': customName,
-    'custom_category': customCategory,
-    'custom_icon': customIcon,
-    'custom_color': customColor,
-    'created_by_id': createdById,
-    'children_id': childrenId,
-    'updated_at': updatedAt,
-    'created_at': createdAt,
-    'id': id,
-  };
+        'date': date,
+        'time_start': timeStart,
+        'time_end': timeEnd,
+        'schedule_item_id': scheduleItemId,
+        'custom_name': customName,
+        'custom_category': customCategory,
+        'custom_icon': customIcon,
+        'custom_color': customColor,
+        'created_by_id': createdById,
+        'children_id': childrenId,
+        'updated_at': updatedAt,
+        'created_at': createdAt,
+        'id': id,
+      };
 }
-

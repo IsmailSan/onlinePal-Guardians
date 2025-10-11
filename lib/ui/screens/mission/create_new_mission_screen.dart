@@ -406,7 +406,7 @@ class _CreateNewMissionScreenState extends State<CreateNewMissionScreen> {
                                         ],
                                       );
                                     } else if (state is MissionError) {
-                                      return Text("Error: ${state.message}");
+                                      return const SizedBox.shrink();
                                     }
                                     return const SizedBox.shrink();
                                   },
@@ -506,7 +506,7 @@ class _CreateNewMissionScreenState extends State<CreateNewMissionScreen> {
                                         ],
                                       );
                                     } else if (state is MissionError) {
-                                      return Text("Error: ${state.message}");
+                                      return const SizedBox.shrink();
                                     }
                                     return const SizedBox.shrink();
                                   },

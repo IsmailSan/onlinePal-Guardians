@@ -15,7 +15,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'dialog/confirm_action_dialog.dart';
 
-
 class PunishmentHistoryScreen extends StatefulWidget {
   final PunishmentHistoryItem? punishment;
   final String? status;
@@ -24,7 +23,8 @@ class PunishmentHistoryScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<PunishmentHistoryScreen> createState() => _PunishmentHistoryScreenState();
+  State<PunishmentHistoryScreen> createState() =>
+      _PunishmentHistoryScreenState();
 }
 
 class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
@@ -32,11 +32,11 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
   final TextEditingController _pointController = TextEditingController();
   final TextEditingController _missionController = TextEditingController();
   final TextEditingController _rewardAssignedTimeController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _exchangedPointsController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _missionSuccessCountController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   DateTime selectedStartDate = DateTime.now();
   DateTime selectedEndDate = DateTime.now();
@@ -64,29 +64,30 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
     context.read<MissionBloc>().add(MissionInitialized());
     if (childUserId != null) {
       context.read<MissionBloc>().add(GetMissions(
-        childrenId: childUserId,
-        status: "active",
-      ));
+            childrenId: childUserId,
+            status: "active",
+          ));
     }
 
     _historyPunishment = widget.punishment;
-    _initialStartDate = DateTime.parse(
-        _historyPunishment?.periodStartDate ?? DateTime.now().toIso8601String());
+    _initialStartDate = DateTime.parse(_historyPunishment?.periodStartDate ??
+        DateTime.now().toIso8601String());
     _initialEndDate = DateTime.parse(
         _historyPunishment?.periodEndDate ?? DateTime.now().toIso8601String());
     _pointController.text = _historyPunishment?.pointsNeeded ?? "";
     _noteController.text = _historyPunishment?.description ?? "";
-    _missionSuccessCountController.text = _historyPunishment?.qtyCondition.toString() ?? "";
-    _missionController.text = _historyPunishment?.mission?.name  ?? "";
-    _rewardAssignedTimeController.text = _historyPunishment?.createdAt  ?? "";
-    _exchangedPointsController.text = _historyPunishment?.pointsNeeded  ?? "";
+    _missionSuccessCountController.text =
+        _historyPunishment?.qtyCondition.toString() ?? "";
+    _missionController.text = _historyPunishment?.mission?.name ?? "";
+    _rewardAssignedTimeController.text = _historyPunishment?.createdAt ?? "";
+    _exchangedPointsController.text = _historyPunishment?.pointsNeeded ?? "";
     selectedStartDate = _initialStartDate;
     selectedEndDate = _initialEndDate;
   }
 
   void _onScroll() async {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 100 &&
+            _scrollController.position.maxScrollExtent - 100 &&
         !_isFetchingMore &&
         _nextCursor != null) {
       setState(() {
@@ -98,11 +99,11 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
 
       if (childUserId != null) {
         context.read<MissionBloc>().add(GetMissions(
-          childrenId: childUserId,
-          status: "active",
-          cursor: _nextCursor,
-          isRefresh: false,
-        ));
+              childrenId: childUserId,
+              status: "active",
+              cursor: _nextCursor,
+              isRefresh: false,
+            ));
       }
     }
   }
@@ -167,7 +168,7 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Kondisi Hadiah Aktif",
+                        "Kondisi Hukuman Aktif",
                         style: blackTextStyle.copyWith(
                             fontSize: 20.sp,
                             fontWeight: bold,
@@ -221,8 +222,7 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
                             ),
                             SizedBox(height: 20.h),
                             Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
                                   width: 150.w,
@@ -231,20 +231,20 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     border: Border(
-                                        bottom: BorderSide(
-                                            color: lightBlueColor)),
+                                        bottom:
+                                            BorderSide(color: lightBlueColor)),
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "${selectedStartDate.day.toString().padLeft(2, '0')}/${selectedStartDate.month.toString().padLeft(2, '0')}/${selectedStartDate.year}",
                                         style: widget.status == "active"
                                             ? blackTextStyle.copyWith(
-                                            fontSize: 16.sp)
+                                                fontSize: 16.sp)
                                             : grayTextStyle.copyWith(
-                                            fontSize: 16.sp),
+                                                fontSize: 16.sp),
                                       ),
                                       SizedBox.shrink(),
                                     ],
@@ -252,7 +252,7 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
                                 ),
                                 Padding(
                                   padding:
-                                  EdgeInsets.symmetric(horizontal: 8.w),
+                                      EdgeInsets.symmetric(horizontal: 8.w),
                                   child: Text("-",
                                       style: blackTextStyle.copyWith(
                                           fontSize: 16.sp)),
@@ -264,16 +264,16 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     border: Border(
-                                        bottom: BorderSide(
-                                            color: lightBlueColor)),
+                                        bottom:
+                                            BorderSide(color: lightBlueColor)),
                                   ),
                                   child: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "${selectedEndDate.day.toString().padLeft(2, '0')}/${selectedEndDate.month.toString().padLeft(2, '0')}/${selectedEndDate.year}",
-                                        style:  grayTextStyle.copyWith(
+                                        style: grayTextStyle.copyWith(
                                             fontSize: 16.sp),
                                       ),
                                       SizedBox.shrink(),
@@ -296,43 +296,43 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
                               readOnly: true,
                               isShowLabel: false,
                             ),
-
                             (_historyPunishment?.type == 'mission')
                                 ? Column(
-                              children: [
-                                Text(
-                                  "Misi",
-                                  style: blackTextStyle.copyWith(
-                                      fontSize: 18.sp, fontWeight: medium),
-                                ),
-                                SizedBox(height: 20.h),
-                                CustomFormField(
-                                  label: '',
-                                  hintText: '',
-                                  controller: _missionController,
-                                  readOnly: true,
-                                  isShowLabel: false,
-                                ),
-                              ],
-                            )
+                                    children: [
+                                      Text(
+                                        "Misi",
+                                        style: blackTextStyle.copyWith(
+                                            fontSize: 18.sp,
+                                            fontWeight: medium),
+                                      ),
+                                      SizedBox(height: 20.h),
+                                      CustomFormField(
+                                        label: '',
+                                        hintText: '',
+                                        controller: _missionController,
+                                        readOnly: true,
+                                        isShowLabel: false,
+                                      ),
+                                    ],
+                                  )
                                 : Column(
-                              children: [
-                                Text(
-                                  "Poin yang Ditukar",
-                                  style: blackTextStyle.copyWith(
-                                      fontSize: 18.sp, fontWeight: medium),
-                                ),
-                                SizedBox(height: 20.h),
-                                CustomFormField(
-                                  label: '',
-                                  hintText: '',
-                                  controller: _exchangedPointsController,
-                                  readOnly: true,
-                                  isShowLabel: false,
-                                ),
-                              ],
-                            ),
-
+                                    children: [
+                                      Text(
+                                        "Poin yang Ditukar",
+                                        style: blackTextStyle.copyWith(
+                                            fontSize: 18.sp,
+                                            fontWeight: medium),
+                                      ),
+                                      SizedBox(height: 20.h),
+                                      CustomFormField(
+                                        label: '',
+                                        hintText: '',
+                                        controller: _exchangedPointsController,
+                                        readOnly: true,
+                                        isShowLabel: false,
+                                      ),
+                                    ],
+                                  ),
                             Text(
                               "Catatan",
                               style: blackTextStyle.copyWith(
@@ -349,24 +349,31 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
                               maxLines: null,
                             ),
                             SizedBox(height: 50.h),
-                            BlocListener<RewardPunishmentBloc, RewardPunishmentState>(
+                            BlocListener<RewardPunishmentBloc,
+                                RewardPunishmentState>(
                               listener: (context, state) {
                                 if (state is ConfirmPunishmentSuccess) {
                                   showDialog(
                                     context: context,
                                     barrierDismissible: false,
-                                    builder: (_) => SuccessDialog(message: 'Hukuman berhasil ditandai sebagai selesai', onOk: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const RewardPunishmentScreen()),
-                                      );
-                                    }),
+                                    builder: (_) => SuccessDialog(
+                                        message:
+                                            'Hukuman berhasil ditandai sebagai selesai',
+                                        onOk: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const RewardPunishmentScreen()),
+                                          );
+                                        }),
                                   );
                                 } else if (state is RewardPunishmentError) {
                                   showDialog(
                                     context: context,
                                     barrierDismissible: false,
-                                    builder: (_) => ErrorDialog(message: state.message),
+                                    builder: (_) =>
+                                        ErrorDialog(message: state.message),
                                   );
                                 }
                               },
@@ -377,30 +384,32 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
                                     onPressed: () {
                                       showDialog(
                                         context: context,
-                                        builder: (_) =>
-                                            ConfirmActionDialog<RewardPunishmentBloc>(
-                                              title: 'Apakah Anda yakin ingin menandai hukuman ini sebagai "selesai"?',
-                                              subtitle:
+                                        builder: (_) => ConfirmActionDialog<
+                                            RewardPunishmentBloc>(
+                                          title:
+                                              'Apakah Anda yakin ingin menandai hukuman ini sebagai "selesai"?',
+                                          subtitle:
                                               'Notifikasi mengenai aksi ini akan dikirimkan ke perangkat anak.',
-                                              primaryButtonText: 'Ya',
-                                              primaryButtonTextColor: blackColor,
-                                              secondaryButtonText: 'Tidak',
-                                              primaryButtonColor: greenColor,
-                                              secondaryButtonColor: whiteColor,
-                                              onConfirmEvent:
-                                              ConfirmPunishment(punishmentId: widget.punishment?.id ?? 0),
-                                            ),
+                                          primaryButtonText: 'Ya',
+                                          primaryButtonTextColor: blackColor,
+                                          secondaryButtonText: 'Tidak',
+                                          primaryButtonColor: greenColor,
+                                          secondaryButtonColor: whiteColor,
+                                          onConfirmEvent: ConfirmPunishment(
+                                              punishmentId:
+                                                  widget.punishment?.id ?? 0),
+                                        ),
                                       );
                                     },
                                     style: OutlinedButton.styleFrom(
                                       side:
-                                      const BorderSide(color: Colors.black),
+                                          const BorderSide(color: Colors.black),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 16, horizontal: 16),
-                                      backgroundColor:  greenColor,
+                                      backgroundColor: greenColor,
                                     ),
                                     child: Text(
                                       'Konfirmasi pemberian hadiah',
@@ -419,24 +428,25 @@ class _PunishmentHistoryScreenState extends State<PunishmentHistoryScreen> {
                                   onPressed: () {
                                     showDialog(
                                       context: context,
-                                      builder: (_) =>
-                                          ConfirmActionDialog<RewardPunishmentBloc>(
-                                            title:'Apakah Anda yakin ingin menghapus  hadiah ini?',
-                                            subtitle:
+                                      builder: (_) => ConfirmActionDialog<
+                                          RewardPunishmentBloc>(
+                                        title:
+                                            'Apakah Anda yakin ingin menghapus  hadiah ini?',
+                                        subtitle:
                                             'Notifikasi mengenai aksi ini akan dikirimkan ke perangkat anak.',
-                                            primaryButtonText: 'Ya',
-                                            primaryButtonTextColor: whiteColor,
-                                            secondaryButtonText: 'Tidak',
-                                            primaryButtonColor: redColor,
-                                            secondaryButtonColor: whiteColor,
-                                            onConfirmEvent:
-                                            DeletePunishment(punishmentId: widget.punishment?.id ?? 0),
-                                          ),
+                                        primaryButtonText: 'Ya',
+                                        primaryButtonTextColor: whiteColor,
+                                        secondaryButtonText: 'Tidak',
+                                        primaryButtonColor: redColor,
+                                        secondaryButtonColor: whiteColor,
+                                        onConfirmEvent: DeletePunishment(
+                                            punishmentId:
+                                                widget.punishment?.id ?? 0),
+                                      ),
                                     );
                                   },
                                   style: OutlinedButton.styleFrom(
-                                    side:
-                                    const BorderSide(color: Colors.black),
+                                    side: const BorderSide(color: Colors.black),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),

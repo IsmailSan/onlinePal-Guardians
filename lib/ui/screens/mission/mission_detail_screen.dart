@@ -135,7 +135,7 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                                 .read<MissionBloc>()
                                 .add(MissionInitialized());
                             context.read<MissionBloc>().add(GetMissions(
-                                  childrenId: profile.userId,
+                                  childrenId: profile.userId ?? 0,
                                   status: widget.status ?? "",
                                 ));
                           },
@@ -175,14 +175,14 @@ class _MissionDetailScreenState extends State<MissionDetailScreen> {
                       } else if (state is MissionListSuccess) {
                         _isFetchingMore = false;
                         _nextCursor = state
-                            .missionsByStatus[widget.status]?.data.nextCursor
+                            .missionsByStatus[widget.status]?.data?.nextCursor
                             ?.toString();
                       }
                     },
                     builder: (context, state) {
                       if (state is MissionListSuccess) {
                         missions =
-                            state.missionsByStatus[widget.status]?.data.data ??
+                            state.missionsByStatus[widget.status]?.data?.data ??
                                 [];
 
                         if (missions == null || missions!.isEmpty) {

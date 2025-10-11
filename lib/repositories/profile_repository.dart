@@ -70,10 +70,28 @@ class ProfileRepository {
   }) async {
     final dio = await _httpUtils.initDio();
 
-    return await _httpUtils.safeApiCall(() async {
-      final response = await dio.get(ApiConfig.getChildProfile + "/${id}");
-      return GetChildProfileResponse.fromJson(response.data);
-    });
+    try {
+      print("🔵 [getChildProfile] Request → ${ApiConfig.getChildProfile}/$id");
+
+      final response = await dio.get(ApiConfig.getChildProfile + "/$id");
+
+      print("🟢 [getChildProfile] Response status → ${response.statusCode}");
+      print("🟢 [getChildProfile] Response data → ${response.data}");
+
+      final parsed = GetChildProfileResponse.fromJson(response.data);
+
+      print("🟢 [getChildProfile] Parsed model → $parsed");
+
+      return parsed;
+    } on DioException catch (e) {
+      print("🔴 [getChildProfile] Dio error → ${e.message}");
+      print("🔴 [getChildProfile] Dio response → ${e.response?.data}");
+      rethrow;
+    } catch (e, s) {
+      print("🔴 [getChildProfile] Parsing/Other error → $e");
+      print("🔴 [getChildProfile] Stacktrace → $s");
+      rethrow;
+    }
   }
 
   Future<CreateChildProfileResponse> createChildProfile({
@@ -161,15 +179,13 @@ class ProfileRepository {
     });
   }
 
-  Future<AvatarListResponse> getChildAvatarList({
-    required String gender
-  }) async {
+  Future<AvatarListResponse> getChildAvatarList(
+      {required String gender}) async {
     final dio = await _httpUtils.initDio();
 
     return await _httpUtils.safeApiCall(() async {
-      final response = await dio.get(
-          "${ApiConfig.avatarList}?gender=${gender}&role=children"
-      );
+      final response = await dio
+          .get("${ApiConfig.avatarList}?gender=${gender}&role=children");
       print("child avatar respone ${response}");
       return AvatarListResponse.fromJson(response.data);
     });

@@ -5,6 +5,7 @@ import 'package:online_pal_guardians/bloc/profile_bloc/child_profile/child_profi
 import 'package:online_pal_guardians/bloc/profile_bloc/child_profile/child_profile_state.dart';
 import 'package:online_pal_guardians/shared/theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:online_pal_guardians/ui/widgets/success_dialog.dart';
 import 'package:online_pal_guardians/utils/session_helper.dart';
 
 class PreferenceScreen extends StatefulWidget {
@@ -156,12 +157,12 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
 
           setState(() {
             favoritePhysicialActivities =
-                List<String>.from(profile.favoritePhysicalActivities);
-            favoriteHobbies = List<String>.from(profile.hobbies);
+                List<String>.from(profile?.favoritePhysicalActivities ?? []);
+            favoriteHobbies = List<String>.from(profile?.hobbies ?? []);
             favoriteFamilyActivities =
-                List<String>.from(profile.favoriteFamilyActivities);
+                List<String>.from(profile?.favoriteFamilyActivities ?? []);
             favoriteOnlineActivities =
-                List<String>.from(profile.favoriteOnlineActivities);
+                List<String>.from(profile?.favoriteOnlineActivities ?? []);
           });
         }
       },
@@ -407,11 +408,18 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
                         if (state is AddChildPreferenceSuccess) {
                           final session = SessionHelper();
                           session.setPreferenceProfileFilled(true);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text("Preferensi berhasil disimpan!"),
-                              backgroundColor: Colors.green,
-                            ),
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   SnackBar(
+                          //     content: Text("Preferensi berhasil disimpan!"),
+                          //     backgroundColor: Colors.green,
+                          //   ),
+                          // );
+
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => SuccessDialog(
+                                message: 'Preferensi berhasil disimpan'),
                           );
                         } else if (state is ChildProfileError) {
                           print(state.message);
@@ -424,7 +432,6 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
                           onPressed: isLoading
                               ? null
                               : () async {
-                                  // ambil registeredProfileId dari session
                                   final registeredProfileId =
                                       await session.getProfileId();
 
@@ -433,7 +440,6 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
                                       ? registeredProfileId
                                       : childProfileId;
 
-                                  // kalau mode registrasi dan id masih null -> kasih pesan error
                                   if (widget.isRegistration &&
                                       registeredProfileId == null) {
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -483,7 +489,7 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
                               : Text(
                                   'Selesai',
                                   style: blackTextStyle.copyWith(
-                                    fontSize: 20.sp,
+                                    fontSize: 18.sp,
                                     fontWeight: bold,
                                   ),
                                 ),

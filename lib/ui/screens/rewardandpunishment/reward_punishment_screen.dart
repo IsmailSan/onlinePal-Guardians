@@ -80,26 +80,21 @@ class _RewardPunishmentScreenState extends State<RewardPunishmentScreen> {
 
       context.read<RewardPunishmentBloc>().add(RewardPunishmentInitialized());
 
-      if(
-          childUserId != null) {
-      context.read<RewardPunishmentBloc>().add(GetActiveRewardList(childrenId: childUserId));
+      if (childUserId != null) {
+        context
+            .read<RewardPunishmentBloc>()
+            .add(GetActiveRewardList(childrenId: childUserId));
 
-        context
-            .read<RewardPunishmentBloc>()
-            .add(GetRewardHistoryList(
-          childrenId: childUserId,
-        ));
-        context
-            .read<RewardPunishmentBloc>()
-            .add(GetActivePunishmentList(
-          childrenId: childUserId,
-        ));
-        context
-            .read<RewardPunishmentBloc>()
-            .add(GetPunishmentHistoryList(
-          childrenId: childUserId,
-        ));
-        }
+        context.read<RewardPunishmentBloc>().add(GetRewardHistoryList(
+              childrenId: childUserId,
+            ));
+        context.read<RewardPunishmentBloc>().add(GetActivePunishmentList(
+              childrenId: childUserId,
+            ));
+        context.read<RewardPunishmentBloc>().add(GetPunishmentHistoryList(
+              childrenId: childUserId,
+            ));
+      }
       _hasLoadedData = true;
     });
   }
@@ -136,29 +131,29 @@ class _RewardPunishmentScreenState extends State<RewardPunishmentScreen> {
                       children: [
                         ChildProfileSelector(
                           onProfileChanged: (profile) {
-                            // context
-                            //     .read<RewardPunishmentBloc>()
-                            //     .add(RewardPunishmentInitialized());
-                            // context
-                            //     .read<RewardPunishmentBloc>()
-                            //     .add(GetActiveRewardList(
-                            //       childrenId: profile.id,
-                            //     ));
-                            // context
-                            //     .read<RewardPunishmentBloc>()
-                            //     .add(GetRewardHistoryList(
-                            //       childrenId: profile.id,
-                            //     ));
-                            // context
-                            //     .read<RewardPunishmentBloc>()
-                            //     .add(GetActivePunishmentList(
-                            //       childrenId: profile.id,
-                            //     ));
-                            // context
-                            //     .read<RewardPunishmentBloc>()
-                            //     .add(GetPunishmentHistoryList(
-                            //       childrenId: profile.id,
-                            //     ));
+                            context
+                                .read<RewardPunishmentBloc>()
+                                .add(RewardPunishmentInitialized());
+                            context
+                                .read<RewardPunishmentBloc>()
+                                .add(GetActiveRewardList(
+                                  childrenId: profile.userId ?? 0,
+                                ));
+                            context
+                                .read<RewardPunishmentBloc>()
+                                .add(GetRewardHistoryList(
+                                  childrenId: profile.userId ?? 0,
+                                ));
+                            context
+                                .read<RewardPunishmentBloc>()
+                                .add(GetActivePunishmentList(
+                                  childrenId: profile.userId ?? 0,
+                                ));
+                            context
+                                .read<RewardPunishmentBloc>()
+                                .add(GetPunishmentHistoryList(
+                                  childrenId: profile.userId ?? 0,
+                                ));
                           },
                         ),
                         SizedBox(width: 14.w),
@@ -464,22 +459,25 @@ class _RewardPunishmentScreenState extends State<RewardPunishmentScreen> {
                                 return (state as ActiveRewardListLoaded)
                                         .response
                                         .data
-                                        .data ??
+                                        ?.data ??
                                     [];
                               },
                               onTapItem: (context, item) {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            EditRewardScreen(reward: item,)));
+                                        builder: (context) => EditRewardScreen(
+                                              reward: item,
+                                            )));
                               },
                               onTapMore: (context, status) {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const RewardDetailScreen(status: 'active',)));
+                                            const RewardDetailScreen(
+                                              status: 'active',
+                                            )));
                               },
                             ),
                             SizedBox(height: 22.h),
@@ -497,7 +495,7 @@ class _RewardPunishmentScreenState extends State<RewardPunishmentScreen> {
                                 return (state as RewardHistoryListLoaded)
                                         .response
                                         .data
-                                        .data ??
+                                        ?.data ??
                                     [];
                               },
                               onTapItem: (context, item) {
@@ -505,14 +503,18 @@ class _RewardPunishmentScreenState extends State<RewardPunishmentScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            RewardHistoryScreen(reward: item,)));
+                                            RewardHistoryScreen(
+                                              reward: item,
+                                            )));
                               },
                               onTapMore: (context, status) {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const RewardDetailScreen(status: 'history',)));
+                                            const RewardDetailScreen(
+                                              status: 'history',
+                                            )));
                               },
                             ),
 
@@ -524,14 +526,14 @@ class _RewardPunishmentScreenState extends State<RewardPunishmentScreen> {
                               status: '',
                               bloc: context.read<RewardPunishmentBloc>(),
                               isLoading: (state) =>
-                              state is ActivePunishmentLoading,
+                                  state is ActivePunishmentLoading,
                               isSuccess: (state) =>
-                              state is ActivePunishmentListLoaded,
+                                  state is ActivePunishmentListLoaded,
                               extractList: (state, status) {
                                 return (state as ActivePunishmentListLoaded)
-                                    .response
-                                    .data
-                                    .data ??
+                                        .response
+                                        .data
+                                        ?.data ??
                                     [];
                               },
                               onTapItem: (context, item) {
@@ -539,14 +541,18 @@ class _RewardPunishmentScreenState extends State<RewardPunishmentScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                        EditPunishmentScreen(punishment: item,)));
+                                            EditPunishmentScreen(
+                                              punishment: item,
+                                            )));
                               },
                               onTapMore: (context, status) {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                        const PunishmentDetailScreen(status: 'active',)));
+                                            const PunishmentDetailScreen(
+                                              status: 'active',
+                                            )));
                               },
                             ),
 
@@ -558,14 +564,14 @@ class _RewardPunishmentScreenState extends State<RewardPunishmentScreen> {
                               status: 'history',
                               bloc: context.read<RewardPunishmentBloc>(),
                               isLoading: (state) =>
-                              state is PunishmentHistoryLoading,
+                                  state is PunishmentHistoryLoading,
                               isSuccess: (state) =>
-                              state is PunishmentHistoryListLoaded,
+                                  state is PunishmentHistoryListLoaded,
                               extractList: (state, status) {
                                 return (state as PunishmentHistoryListLoaded)
-                                    .response
-                                    .data
-                                    .data ??
+                                        .response
+                                        .data
+                                        ?.data ??
                                     [];
                               },
                               onTapItem: (context, item) {
@@ -573,14 +579,16 @@ class _RewardPunishmentScreenState extends State<RewardPunishmentScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                        const PunishmentHistoryScreen()));
+                                            const PunishmentHistoryScreen()));
                               },
                               onTapMore: (context, status) {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                        const PunishmentDetailScreen(status: 'history',)));
+                                            const PunishmentDetailScreen(
+                                              status: 'history',
+                                            )));
                               },
                             ),
                           ],
@@ -634,12 +642,13 @@ class _RewardPunishmentScreenState extends State<RewardPunishmentScreen> {
           BlocBuilder<B, S>(
             bloc: bloc,
             buildWhen: (previous, current) =>
-            isLoading(current) || isSuccess(current) || current is RewardPunishmentError,
+                isLoading(current) ||
+                isSuccess(current) ||
+                current is RewardPunishmentError,
             builder: (context, state) {
               if (isLoading(state)) {
                 return const Center(child: CircularProgressIndicator());
-              }
-              else if (state is RewardPunishmentError) {
+              } else if (state is RewardPunishmentError) {
                 return Center(
                   child: Text(
                     '${state.message}',
@@ -693,7 +702,9 @@ class _RewardPunishmentScreenState extends State<RewardPunishmentScreen> {
                                     ),
                                     SizedBox(height: 4.h),
                                     Text(
-                                      "Periode:  'N/A'}",
+                                      item.periodStartDate != null
+                                          ? "Periode:  ${item.periodStartDate} - ${item.periodEndDate}"
+                                          : "Pengurangan Poin: ${item.pointReduction}",
                                       style: blackTextStyle.copyWith(
                                         fontSize: 10.sp,
                                         fontWeight: FontWeight.w300,

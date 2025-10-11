@@ -204,7 +204,7 @@ class _EditPunishmentScreenState extends State<EditPunishmentScreen> {
                                   .read<MissionBloc>()
                                   .add(MissionInitialized());
                               context.read<MissionBloc>().add(GetMissions(
-                                    childrenId: profile.userId,
+                                    childrenId: profile.userId ?? 0,
                                     status: "active",
                                   ));
                             },
@@ -237,9 +237,10 @@ class _EditPunishmentScreenState extends State<EditPunishmentScreen> {
                       if (state is MissionListSuccess) {
                         setState(() {
                           missions =
-                              state.missionsByStatus["active"]?.data.data ?? [];
+                              state.missionsByStatus["active"]?.data?.data ??
+                                  [];
                           _nextCursor = state
-                              .missionsByStatus["active"]?.data.nextCursor
+                              .missionsByStatus["active"]?.data?.nextCursor
                               ?.toString();
                           _isFetchingMore = false;
                         });
@@ -614,40 +615,43 @@ class _EditPunishmentScreenState extends State<EditPunishmentScreen> {
                                 },
                               ),
                               SizedBox(height: 10.h),
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          "Bingung mengenai bentuk/jenis hukuman untuk diberikan?\n",
-                                      style: blackTextStyle.copyWith(
-                                        fontSize: 14.sp,
-                                        fontWeight: medium,
-                                        fontStyle: FontStyle.italic,
-                                        decoration: TextDecoration.underline,
-                                        color: purpleColor, // agar mirip link
+                              Visibility(
+                                visible: false,
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text:
+                                            "Bingung mengenai bentuk/jenis hukuman untuk diberikan?\n",
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 14.sp,
+                                          fontWeight: medium,
+                                          fontStyle: FontStyle.italic,
+                                          decoration: TextDecoration.underline,
+                                          color: purpleColor, // agar mirip link
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            print("Teks 1 diklik");
+                                          },
                                       ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          print("Teks 1 diklik");
-                                        },
-                                    ),
-                                    TextSpan(
-                                      text:
-                                          "Klik disini untuk melihat inspirasi hadiah/hukuman dari kami!",
-                                      style: blackTextStyle.copyWith(
-                                        fontSize: 14.sp,
-                                        fontWeight: medium,
-                                        fontStyle: FontStyle.italic,
-                                        decoration: TextDecoration.underline,
-                                        color: purpleColor,
+                                      TextSpan(
+                                        text:
+                                            "Klik disini untuk melihat inspirasi hadiah/hukuman dari kami!",
+                                        style: blackTextStyle.copyWith(
+                                          fontSize: 14.sp,
+                                          fontWeight: medium,
+                                          fontStyle: FontStyle.italic,
+                                          decoration: TextDecoration.underline,
+                                          color: purpleColor,
+                                        ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            print("Teks 2 diklik");
+                                          },
                                       ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          print("Teks 2 diklik");
-                                        },
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 20.h),
@@ -670,7 +674,7 @@ class _EditPunishmentScreenState extends State<EditPunishmentScreen> {
                               BlocListener<RewardPunishmentBloc,
                                   RewardPunishmentState>(
                                 listener: (context, state) {
-                                  if (state is CreatePunishmentSuccess) {
+                                  if (state is UpdatePunishmentSuccess) {
                                     showDialog(
                                       context: context,
                                       barrierDismissible: false,
@@ -686,7 +690,7 @@ class _EditPunishmentScreenState extends State<EditPunishmentScreen> {
                                             );
                                           }),
                                     );
-                                  } else if (state is RewardPunishmentError) {
+                                  } else if (state is UpdatePunishmentError) {
                                     showDialog(
                                       context: context,
                                       barrierDismissible: false,
@@ -798,7 +802,7 @@ class _EditPunishmentScreenState extends State<EditPunishmentScreen> {
                                             );
                                           }),
                                     );
-                                  } else if (state is RewardPunishmentError) {
+                                  } else if (state is DeletePunishmentError) {
                                     showDialog(
                                       context: context,
                                       barrierDismissible: false,

@@ -19,7 +19,8 @@ import 'package:online_pal_guardians/repositories/reward_punishment_repository.d
 part 'reward_punishment_event.dart';
 part 'reward_punishment_state.dart';
 
-class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentState> {
+class RewardPunishmentBloc
+    extends Bloc<RewardPunishmentEvent, RewardPunishmentState> {
   final RewardPunishmentRepository rewardPunishmentRepository;
 
   RewardPunishmentBloc({required this.rewardPunishmentRepository})
@@ -42,16 +43,16 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
   }
 
   void _onInitialized(
-      RewardPunishmentInitialized event,
-      Emitter<RewardPunishmentState> emit,
-      ) {
+    RewardPunishmentInitialized event,
+    Emitter<RewardPunishmentState> emit,
+  ) {
     emit(const RewardPunishmentInitial());
   }
 
   Future<void> _onCreateReward(
-      CreateReward event,
-      Emitter<RewardPunishmentState> emit,
-      ) async {
+    CreateReward event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     emit(const RewardPunishmentLoading());
 
     try {
@@ -72,15 +73,14 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
 
       emit(CreateRewardSuccess(response));
     } catch (e) {
-      emit(RewardPunishmentError(e.toString()));
+      emit(CreateRewardError(e.toString()));
     }
   }
 
-
   Future<void> _onUpdateReward(
-      UpdateReward event,
-      Emitter<RewardPunishmentState> emit,
-      ) async {
+    UpdateReward event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     emit(const RewardPunishmentLoading());
     try {
       final response = await rewardPunishmentRepository.updateReward(
@@ -100,12 +100,14 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
       );
       emit(UpdateRewardSuccess(response));
     } catch (e) {
-      emit(RewardPunishmentError(e.toString()));
+      emit(UpdateRewardError(e.toString()));
     }
   }
 
-  Future<void> _onDeleteReward(DeleteReward event,
-      Emitter<RewardPunishmentState> emit,) async {
+  Future<void> _onDeleteReward(
+    DeleteReward event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     emit(RewardPunishmentLoading());
     try {
       final response = await rewardPunishmentRepository.deleteReward(
@@ -113,12 +115,14 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
       );
       emit(DeleteRewardSuccess(response));
     } catch (e) {
-      emit(RewardPunishmentError(e.toString()));
+      emit(DeleteRewardError(e.toString()));
     }
   }
 
-  Future<void> _onConfirmReward(ConfirmReward event,
-      Emitter<RewardPunishmentState> emit,) async {
+  Future<void> _onConfirmReward(
+    ConfirmReward event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     emit(RewardPunishmentLoading());
     try {
       final response = await rewardPunishmentRepository.confirmReward(
@@ -130,8 +134,10 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
     }
   }
 
-  Future<void> _onUpdateRewardStatus(UpdateRewardStatus event,
-      Emitter<RewardPunishmentState> emit,) async {
+  Future<void> _onUpdateRewardStatus(
+    UpdateRewardStatus event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     emit(RewardPunishmentLoading());
     try {
       final response = await rewardPunishmentRepository.updateRewardStatus(
@@ -143,11 +149,10 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
     }
   }
 
-
   Future<void> _onCreatePunishment(
-      CreatePunishment event,
-      Emitter<RewardPunishmentState> emit,
-      ) async {
+    CreatePunishment event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     emit(const RewardPunishmentLoading());
     try {
       final response = await rewardPunishmentRepository.createPunishment(
@@ -163,14 +168,14 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
       );
       emit(CreatePunishmentSuccess(response));
     } catch (e) {
-      emit(RewardPunishmentError(e.toString()));
+      emit(CreatePunishmentError(e.toString()));
     }
   }
 
   Future<void> _onUpdatePunishment(
-      UpdatePunishment event,
-      Emitter<RewardPunishmentState> emit,
-      ) async {
+    UpdatePunishment event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     emit(const RewardPunishmentLoading());
     try {
       final response = await rewardPunishmentRepository.updatePunishment(
@@ -187,12 +192,14 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
       );
       emit(UpdatePunishmentSuccess(response));
     } catch (e) {
-      emit(RewardPunishmentError(e.toString()));
+      emit(UpdatePunishmentError(e.toString()));
     }
   }
 
-  Future<void> _onUpdatePunishmentStatus(UpdatePunishmentStatus event,
-      Emitter<RewardPunishmentState> emit,) async {
+  Future<void> _onUpdatePunishmentStatus(
+    UpdatePunishmentStatus event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     emit(RewardPunishmentLoading());
     try {
       final response = await rewardPunishmentRepository.updatePunishmentStatus(
@@ -204,8 +211,10 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
     }
   }
 
-  Future<void> _onDeletePunishment(DeletePunishment event,
-      Emitter<RewardPunishmentState> emit,) async {
+  Future<void> _onDeletePunishment(
+    DeletePunishment event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     emit(RewardPunishmentLoading());
     try {
       final response = await rewardPunishmentRepository.deletePunishment(
@@ -213,12 +222,14 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
       );
       emit(DeletePunishmentSuccess(response));
     } catch (e) {
-      emit(RewardPunishmentError(e.toString()));
+      emit(DeletePunishmentError(e.toString()));
     }
   }
 
-  Future<void> _onConfirmPunishment(ConfirmPunishment event,
-      Emitter<RewardPunishmentState> emit,) async {
+  Future<void> _onConfirmPunishment(
+    ConfirmPunishment event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     emit(RewardPunishmentLoading());
     try {
       final response = await rewardPunishmentRepository.confirmPunishment(
@@ -231,32 +242,29 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
   }
 
   void _onGetActiveRewardList(
-      GetActiveRewardList event,
-      Emitter<RewardPunishmentState> emit,
-      ) async {
+    GetActiveRewardList event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     try {
       int cursor = 0;
       List<RewardItem> existingRewards = [];
 
       if (state is ActiveRewardListLoaded) {
         final current = state as ActiveRewardListLoaded;
-        cursor = current.response.data.nextCursor ?? 0;
-        existingRewards = current.response.data.data ?? [];
+        cursor = current.response.data?.nextCursor ?? 0;
+        existingRewards = current.response.data?.data ?? [];
 
-        if (current.response.data.nextCursor == null) return;
+        if (current.response.data?.nextCursor == null) return;
       } else {
         emit(ActiveRewardLoading());
       }
 
       final response = await rewardPunishmentRepository.getActiveRewardList(
-        childrenId: event.childrenId,
-        cursor: cursor,
-        limit: 10
-      );
+          childrenId: event.childrenId, cursor: cursor, limit: 10);
 
       final allRewards = [
         ...existingRewards,
-        ...response.data.data,
+        ...?response.data?.data,
       ];
 
       final updatedResponse = ActiveRewardListResponse(
@@ -264,7 +272,7 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
         message: response.message,
         data: RewardListData(
           data: allRewards,
-          nextCursor: response.data.nextCursor,
+          nextCursor: response.data?.nextCursor,
         ),
       );
 
@@ -275,33 +283,30 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
   }
 
   void _onGetRewardHistoryList(
-      GetRewardHistoryList event,
-      Emitter<RewardPunishmentState> emit,
-      ) async {
+    GetRewardHistoryList event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     try {
       int cursor = 0;
       List<RewardHistoryItem> existingRewards = [];
 
       if (state is RewardHistoryListLoaded) {
         final current = state as RewardHistoryListLoaded;
-        cursor = current.response.data.nextCursor ?? 0;
-        existingRewards = current.response.data.data ?? [];
+        cursor = current.response.data?.nextCursor ?? 0;
+        existingRewards = current.response.data?.data ?? [];
 
         // Jika nextCursor null, artinya tidak ada data berikutnya
-        if (current.response.data.nextCursor == null) return;
+        if (current.response.data?.nextCursor == null) return;
       } else {
         emit(RewardHistoryLoading());
       }
 
       final response = await rewardPunishmentRepository.getHistoryRewardList(
-          childrenId: event.childrenId,
-          cursor: cursor,
-          limit: 10
-      );
+          childrenId: event.childrenId, cursor: cursor, limit: 10);
 
       final allRewards = [
         ...existingRewards,
-        ...response.data.data,
+        ...?response.data?.data,
       ];
 
       final updatedResponse = RewardHistoryListResponse(
@@ -309,7 +314,7 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
         message: response.message,
         data: RewardHistoryListData(
           data: allRewards,
-          nextCursor: response.data.nextCursor,
+          nextCursor: response.data?.nextCursor,
         ),
       );
 
@@ -319,35 +324,31 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
     }
   }
 
-
   void _onGetActivePunishmentList(
-      GetActivePunishmentList event,
-      Emitter<RewardPunishmentState> emit,
-      ) async {
+    GetActivePunishmentList event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     try {
       int cursor = 0;
       List<PunishmentItem> existingPunishments = [];
 
       if (state is ActivePunishmentListLoaded) {
         final current = state as ActivePunishmentListLoaded;
-        cursor = current.response.data.nextCursor ?? 0;
-        existingPunishments = current.response.data.data ?? [];
+        cursor = current.response.data?.nextCursor ?? 0;
+        existingPunishments = current.response.data?.data ?? [];
 
         // Jika nextCursor null, artinya tidak ada data berikutnya
-        if (current.response.data.nextCursor == null) return;
+        if (current.response.data?.nextCursor == null) return;
       } else {
         emit(ActivePunishmentLoading());
       }
 
       final response = await rewardPunishmentRepository.getActivePunishmentList(
-          childrenId: event.childrenId,
-          cursor: cursor,
-          limit: 10
-      );
+          childrenId: event.childrenId, cursor: cursor, limit: 10);
 
       final allPunishments = [
         ...existingPunishments,
-        ...response.data.data,
+        ...?response.data?.data,
       ];
 
       final updatedResponse = ActivePunishmentListResponse(
@@ -355,7 +356,7 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
         message: response.message,
         data: PunishmentListData(
           data: allPunishments,
-          nextCursor: response.data.nextCursor,
+          nextCursor: response.data?.nextCursor,
         ),
       );
 
@@ -365,35 +366,32 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
     }
   }
 
-
   void _onGetPunishmentHistoryList(
-      GetPunishmentHistoryList event,
-      Emitter<RewardPunishmentState> emit,
-      ) async {
+    GetPunishmentHistoryList event,
+    Emitter<RewardPunishmentState> emit,
+  ) async {
     try {
       int cursor = 0;
       List<PunishmentHistoryItem> existingPunishments = [];
 
       if (state is PunishmentHistoryListLoaded) {
         final current = state as PunishmentHistoryListLoaded;
-        cursor = current.response.data.nextCursor ?? 0;
-        existingPunishments = current.response.data.data ?? [];
+        cursor = current.response.data?.nextCursor ?? 0;
+        existingPunishments = current.response.data?.data ?? [];
 
         // Jika nextCursor null, artinya tidak ada data berikutnya
-        if (current.response.data.nextCursor == null) return;
+        if (current.response.data?.nextCursor == null) return;
       } else {
         emit(PunishmentHistoryLoading());
       }
 
-      final response = await rewardPunishmentRepository.getHistoryPunishmentList(
-          childrenId: event.childrenId,
-          cursor: cursor,
-          limit: 10
-      );
+      final response =
+          await rewardPunishmentRepository.getHistoryPunishmentList(
+              childrenId: event.childrenId, cursor: cursor, limit: 10);
 
       final allPunishments = [
         ...existingPunishments,
-        ...response.data.data,
+        ...?response.data?.data,
       ];
 
       final updatedResponse = PunishmentHistoryListResponse(
@@ -401,7 +399,7 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
         message: response.message,
         data: PunishmentHistoryListData(
           data: allPunishments,
-          nextCursor: response.data.nextCursor,
+          nextCursor: response.data?.nextCursor,
         ),
       );
 
@@ -410,8 +408,4 @@ class RewardPunishmentBloc extends Bloc<RewardPunishmentEvent, RewardPunishmentS
       emit(RewardPunishmentError(e.toString()));
     }
   }
-
-
 }
-
-

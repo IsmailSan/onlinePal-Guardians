@@ -1,19 +1,21 @@
 class GetProfileResponse {
-  final String status;
-  final String message;
-  final ParentProfile data;
+  final String? status;
+  final String? message;
+  final ParentProfile? data;
 
   GetProfileResponse({
-    required this.status,
-    required this.message,
-    required this.data,
+    this.status,
+    this.message,
+    this.data,
   });
 
   factory GetProfileResponse.fromJson(Map<String, dynamic> json) {
     return GetProfileResponse(
-      status: json['status'],
-      message: json['message'],
-      data: ParentProfile.fromJson(json['data']),
+      status: json['status'] as String?,
+      message: json['message'] as String?,
+      data: json['data'] != null
+          ? ParentProfile.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -21,60 +23,62 @@ class GetProfileResponse {
     return {
       'status': status,
       'message': message,
-      'data': data.toJson(),
+      'data': data?.toJson(),
     };
   }
 }
 
 class ParentProfile {
-  final int id;
-  final int userId;
-  final String name;
-  final String dateOfBirth;
-  final String gender;
-  final String nationality;
-  final String province;
-  final String city;
-  final String postalCode;
-  final String occupation;
-  final String rangeOfFamilyIncome;
-  final int numberOfChildren;
+  final int? id;
+  final int? userId;
+  final String? name;
+  final String? dateOfBirth;
+  final String? gender;
+  final String? nationality;
+  final String? province;
+  final String? city;
+  final String? postalCode;
+  final String? occupation;
+  final String? rangeOfFamilyIncome;
+  final int? numberOfChildren;
   final int? avatarId;
   final Avatar? avatars;
 
   ParentProfile({
-    required this.id,
-    required this.userId,
-    required this.name,
-    required this.dateOfBirth,
-    required this.gender,
-    required this.nationality,
-    required this.province,
-    required this.city,
-    required this.postalCode,
-    required this.occupation,
-    required this.rangeOfFamilyIncome,
-    required this.numberOfChildren,
+    this.id,
+    this.userId,
+    this.name,
+    this.dateOfBirth,
+    this.gender,
+    this.nationality,
+    this.province,
+    this.city,
+    this.postalCode,
+    this.occupation,
+    this.rangeOfFamilyIncome,
+    this.numberOfChildren,
     this.avatarId,
     this.avatars,
   });
 
   factory ParentProfile.fromJson(Map<String, dynamic> json) {
     return ParentProfile(
-      id: json['id'],
-      userId: json['user_id'],
-      name: json['name'],
-      dateOfBirth: json['date_of_birth'],
-      gender: json['gender'],
-      nationality: json['nationality'],
-      province: json['province'],
-      city: json['city'],
-      postalCode: json['postal_code'],
-      occupation: json['occupation'],
-      rangeOfFamilyIncome: json['range_of_family_income'],
-      numberOfChildren: json['number_of_children'],
-      avatarId: json['avatar_id'],
-      avatars: json['avatars'] != null ? Avatar.fromJson(json['avatars']) : null,
+      id: json['id'] as int?,
+      userId: json['user_id'] as int?,
+      name: json['name'] as String?,
+      dateOfBirth: json['date_of_birth'] as String?,
+      gender: json['gender'] as String?,
+      nationality: json['nationality'] as String?,
+      province: json['province'] as String?,
+      city: json['city'] as String?,
+      postalCode: json['postal_code'] as String?,
+      occupation: json['occupation'] as String?,
+      rangeOfFamilyIncome: json['range_of_family_income'] as String?,
+      numberOfChildren: json['number_of_children'] as int?,
+      avatarId: json['avatar_id'] as int?,
+      avatars: json['avatars'] != null
+          ? Avatar.fromJson(json['avatars'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -99,36 +103,36 @@ class ParentProfile {
 }
 
 class Avatar {
-  final int id;
-  final String name;
-  final String image;
-  final String role;
-  final String gender;
+  final int? id;
+  final String? name;
+  final String? image;
+  final String? role;
+  final String? gender;
   final String? createdAt;
   final String? updatedAt;
-  final String imageUrl;
+  final String? imageUrl;
 
   Avatar({
-    required this.id,
-    required this.name,
-    required this.image,
-    required this.role,
-    required this.gender,
+    this.id,
+    this.name,
+    this.image,
+    this.role,
+    this.gender,
     this.createdAt,
     this.updatedAt,
-    required this.imageUrl,
+    this.imageUrl,
   });
 
   factory Avatar.fromJson(Map<String, dynamic> json) {
     return Avatar(
-      id: json['id'],
-      name: json['name'],
-      image: json['image'],
-      role: json['role'],
-      gender: json['gender'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-      imageUrl: json['image_url'],
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+      image: json['image'] as String?,
+      role: json['role'] as String?,
+      gender: json['gender'] as String?,
+      createdAt: json['created_at'] as String?,
+      updatedAt: json['updated_at'] as String?,
+      imageUrl: json['image_url'] as String?,
     );
   }
 

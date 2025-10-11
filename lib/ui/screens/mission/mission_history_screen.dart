@@ -43,14 +43,14 @@ class _MissionHistoryScreenState extends State<MissionHistoryScreen> {
     context.read<MissionBloc>().add(MissionInitialized());
     if (childUserId != null) {
       context.read<MissionBloc>().add(GetMissionsHistory(
-        childrenId: childUserId,
-      ));
+            childrenId: childUserId,
+          ));
     }
   }
 
   void _onScroll() async {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 100 &&
+            _scrollController.position.maxScrollExtent - 100 &&
         !_isFetchingMore &&
         _nextCursor != null) {
       setState(() {
@@ -62,10 +62,10 @@ class _MissionHistoryScreenState extends State<MissionHistoryScreen> {
 
       if (childUserId != null) {
         context.read<MissionBloc>().add(GetMissionsHistory(
-          childrenId: childUserId,
-          cursor: _nextCursor.toString(),
-          isRefresh: false,
-        ));
+              childrenId: childUserId,
+              cursor: _nextCursor.toString(),
+              isRefresh: false,
+            ));
       }
     }
   }
@@ -151,13 +151,13 @@ class _MissionHistoryScreenState extends State<MissionHistoryScreen> {
                                     if (state is MissionHistoryListSuccess) {
                                       _isFetchingMore = false;
                                       _nextCursor =
-                                          state.response.data.nextCursor;
+                                          state.response.data?.nextCursor;
                                     }
                                   },
                                   builder: (context, state) {
                                     if (state is MissionHistoryListSuccess) {
-                                      missions = state.response.data.data ??
-                                          [];
+                                      missions =
+                                          state.response.data?.data ?? [];
                                     }
                                     if (missions != null) {
                                       return Expanded(
@@ -223,16 +223,22 @@ class _MissionHistoryScreenState extends State<MissionHistoryScreen> {
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>
-                                                              InActiveMissionScreen(mission: mission,)));
+                                                                  InActiveMissionScreen(
+                                                                    mission:
+                                                                        mission,
+                                                                  )));
                                                     },
                                                     child: Container(
-                                                      padding: EdgeInsets.all(13.w),
-                                                      decoration: const BoxDecoration(
+                                                      padding:
+                                                          EdgeInsets.all(13.w),
+                                                      decoration:
+                                                          const BoxDecoration(
                                                         color: Colors.indigo,
                                                       ),
                                                       child: Text(
                                                         "Detail",
-                                                        style: whiteTextStyle.copyWith(
+                                                        style: whiteTextStyle
+                                                            .copyWith(
                                                           fontSize: 14.sp,
                                                           fontWeight: medium,
                                                         ),

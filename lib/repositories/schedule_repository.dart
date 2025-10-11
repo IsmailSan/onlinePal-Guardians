@@ -7,7 +7,6 @@ import 'package:online_pal_guardians/network/api_config.dart';
 import 'package:online_pal_guardians/utils/http_utils.dart';
 
 class ScheduleRepository {
-
   Future<CreateScheduleResponse> createSchedule({
     required String date,
     String? dateEnd,
@@ -41,12 +40,12 @@ class ScheduleRepository {
 
     return await HttpUtils().safeApiCall(() async {
       final response = await dio.post(ApiConfig.createSchedule, data: formData);
-      final createScheduleResponse = CreateScheduleResponse.fromJson(response.data);
+      final createScheduleResponse =
+          CreateScheduleResponse.fromJson(response.data);
       print("status create schedule: ${createScheduleResponse.status}");
       return createScheduleResponse;
     });
   }
-
 
   Future<UpdateScheduleResponse> updateSchedule({
     required int scheduleId,
@@ -65,22 +64,38 @@ class ScheduleRepository {
       "date": date,
       "time_start": timeStart,
       "time_end": timeEnd,
-      "schedule_item_id": scheduleItemId,
-      "custom_name": customName,
-      "custom_category": customCategory,
-      "custom_icon": customIcon,
-      "custom_color": customColor,
+      if (scheduleItemId != null) "schedule_item_id": scheduleItemId,
+      if (customName != null) "custom_name": customName,
+      if (customCategory != null) "custom_category": customCategory,
+      if (customIcon != null) "custom_icon": customIcon,
+      if (customColor != null) "custom_color": customColor,
     };
 
     final formData = FormData.fromMap(body);
 
     return await HttpUtils().safeApiCall(() async {
-      Response response =
-      await dio.post(ApiConfig.updateSchedule + "/${scheduleId}", data: formData);
-      final updateMissionResponse =
-      UpdateScheduleResponse.fromJson(response.data);
-      print("status update schedule: ${updateMissionResponse.status}");
-      return updateMissionResponse;
+      try {
+        final response = await dio.post(
+          "${ApiConfig.updateSchedule}/$scheduleId",
+          data: formData,
+        );
+
+        final updateMissionResponse =
+            UpdateScheduleResponse.fromJson(response.data);
+        print("✅ status update schedule: ${updateMissionResponse.status}");
+        return updateMissionResponse;
+      } on DioException catch (e) {
+        // Cetak error detail dari Dio
+        print("❌ DioException updateSchedule: ${e.message}");
+        if (e.response != null) {
+          print("❌ Response status: ${e.response?.statusCode}");
+          print("❌ Response data: ${e.response?.data}");
+        }
+        rethrow; // lempar lagi supaya tetap ditangani safeApiCall
+      } catch (e) {
+        print("❌ Unknown error updateSchedule: $e");
+        rethrow;
+      }
     });
   }
 
@@ -112,7 +127,8 @@ class ScheduleRepository {
       Response response = await dio.get(
         "${ApiConfig.suggestedSchedules}?search=${search}&cursor=$cursor&limit=$limit",
       );
-      final suggestedSchedulesResponse = SuggestedSchedulesResponse.fromJson(response.data);
+      final suggestedSchedulesResponse =
+          SuggestedSchedulesResponse.fromJson(response.data);
       print("suggested schedules response : ${response}");
       return suggestedSchedulesResponse;
     });

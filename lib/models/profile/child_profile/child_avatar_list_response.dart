@@ -1,20 +1,20 @@
 class ChildAvatarListResponse {
-  final String status;
-  final String message;
-  final List<Avatar> data;
+  final String? status;
+  final String? message;
+  final List<Avatar>? data;
 
   ChildAvatarListResponse({
-    required this.status,
-    required this.message,
-    required this.data,
+    this.status,
+    this.message,
+    this.data,
   });
 
   factory ChildAvatarListResponse.fromJson(Map<String, dynamic> json) {
     return ChildAvatarListResponse(
-      status: json['status'] as String,
-      message: json['message'] as String,
-      data: (json['data'] as List)
-          .map((item) => Avatar.fromJson(item as Map<String, dynamic>))
+      status: json['status'] as String?,
+      message: json['message'] as String?,
+      data: (json['data'] as List?)
+          ?.map((item) => Avatar.fromJson(item as Map<String, dynamic>))
           .toList(),
     );
   }
@@ -23,42 +23,42 @@ class ChildAvatarListResponse {
     return {
       'status': status,
       'message': message,
-      'data': data.map((avatar) => avatar.toJson()).toList(),
+      'data': data?.map((avatar) => avatar.toJson()).toList(),
     };
   }
 }
 
 class Avatar {
-  final int id;
-  final String name;
-  final String image;
-  final String role;
-  final String gender;
+  final int? id;
+  final String? name;
+  final String? image;
+  final String? role;
+  final String? gender;
   final String? createdAt;
   final String? updatedAt;
-  final String imageUrl;
+  final String? imageUrl;
 
   Avatar({
-    required this.id,
-    required this.name,
-    required this.image,
-    required this.role,
-    required this.gender,
+    this.id,
+    this.name,
+    this.image,
+    this.role,
+    this.gender,
     this.createdAt,
     this.updatedAt,
-    required this.imageUrl,
+    this.imageUrl,
   });
 
   factory Avatar.fromJson(Map<String, dynamic> json) {
     return Avatar(
-      id: json['id'] as int,
-      name: json['name'] as String,
-      image: json['image'] as String,
-      role: json['role'] as String,
-      gender: json['gender'] as String,
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+      image: json['image'] as String?,
+      role: json['role'] as String?,
+      gender: json['gender'] as String?,
       createdAt: json['created_at'] as String?,
       updatedAt: json['updated_at'] as String?,
-      imageUrl: json['image_url'] as String,
+      imageUrl: json['image_url'] as String?,
     );
   }
 

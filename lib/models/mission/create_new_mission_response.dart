@@ -3,26 +3,26 @@ import 'dart:convert';
 class CreateNewMissionResponse {
   final String status;
   final String message;
-  final Mission data;
+  final Mission? data;
 
   CreateNewMissionResponse({
     required this.status,
     required this.message,
-    required this.data,
+    this.data,
   });
 
   factory CreateNewMissionResponse.fromJson(Map<String, dynamic> json) {
     return CreateNewMissionResponse(
       status: json['status'] ?? '',
       message: json['message'] ?? '',
-      data: Mission.fromJson(json['data']),
+      data: json['data'] != null ? Mission.fromJson(json['data']) : null,
     );
   }
 
   Map<String, dynamic> toJson() => {
         'status': status,
         'message': message,
-        'data': data.toJson(),
+        'data': data?.toJson(),
       };
 
   static CreateNewMissionResponse fromRawJson(String str) =>
@@ -32,21 +32,21 @@ class CreateNewMissionResponse {
 }
 
 class Mission {
-  final int id;
-  final String name;
-  final String description;
-  final String periodeTime;
+  final int? id;
+  final String? name;
+  final String? description;
+  final String? periodeTime;
   final String? startDate;
   final String? endDate;
-  final String type;
-  final String condition;
-  final int parentId;
-  final int childrenId;
-  final String status;
-  final String createdAt;
-  final String updatedAt;
+  final String? type;
+  final String? condition;
+  final int? parentId;
+  final int? childrenId;
+  final String? status;
+  final String? createdAt;
+  final String? updatedAt;
 
-  // opsional (karena backend tidak selalu kirim)
+  // opsional
   final String? appCategory;
   final String? appName;
   final int? missionSuggestionsId;
@@ -54,19 +54,19 @@ class Mission {
   final int? appsId;
 
   Mission({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.periodeTime,
-    required this.startDate,
-    required this.endDate,
-    required this.type,
-    required this.condition,
-    required this.parentId,
-    required this.childrenId,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
+    this.id,
+    this.name,
+    this.description,
+    this.periodeTime,
+    this.startDate,
+    this.endDate,
+    this.type,
+    this.condition,
+    this.parentId,
+    this.childrenId,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
     this.appCategory,
     this.appName,
     this.missionSuggestionsId,
@@ -76,20 +76,18 @@ class Mission {
 
   factory Mission.fromJson(Map<String, dynamic> json) => Mission(
         id: _parseInt(json['id']),
-        name: json['name'] ?? '',
-        description: json['description'] ?? '',
-        periodeTime: json['periode_time'] ?? '',
+        name: json['name'],
+        description: json['description'],
+        periodeTime: json['periode_time'],
         startDate: json['start_date'],
         endDate: json['end_date'],
-        type: json['type'] ?? '',
-        condition: json['condition'] ?? '',
+        type: json['type'],
+        condition: json['condition'],
         parentId: _parseInt(json['parent_id']),
         childrenId: _parseInt(json['children_id']),
-        status: json['status'] ?? '',
-        createdAt: json['created_at'] ?? '',
-        updatedAt: json['updated_at'] ?? '',
-
-        // opsional
+        status: json['status'],
+        createdAt: json['created_at'],
+        updatedAt: json['updated_at'],
         appCategory: json['app_category'],
         appName: json['app_name'],
         missionSuggestionsId: _parseInt(json['mission_suggestions_id']),
@@ -111,8 +109,6 @@ class Mission {
         'status': status,
         'created_at': createdAt,
         'updated_at': updatedAt,
-
-        // opsional
         'app_category': appCategory,
         'app_name': appName,
         'mission_suggestions_id': missionSuggestionsId,
@@ -120,9 +116,10 @@ class Mission {
         'apps_id': appsId,
       };
 
-  static int _parseInt(dynamic value) {
+  static int? _parseInt(dynamic value) {
+    if (value == null) return null;
     if (value is int) return value;
-    if (value is String) return int.tryParse(value) ?? 0;
-    return 0;
+    if (value is String) return int.tryParse(value);
+    return null;
   }
 }

@@ -179,8 +179,8 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
 
         final existingResponse = currentMap[event.status];
         if (existingResponse != null && !event.isRefresh) {
-          cursor = existingResponse.data.nextCursor;
-          existingMissions = existingResponse.data.data;
+          cursor = existingResponse.data?.nextCursor;
+          existingMissions = existingResponse.data?.data ?? [];
 
           if (cursor == null) {
             // Tidak ada data lagi, hentikan pagination
@@ -210,15 +210,15 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
         limit: event.limit,
       );
 
-      final newMissions = response.data.data;
-      final allMissions = [...existingMissions, ...newMissions];
+      final newMissions = response.data?.data;
+      final allMissions = [...?existingMissions, ...?newMissions];
 
       final updatedResponse = MissionListResponse(
         status: response.status,
         message: response.message,
         data: MissionData(
           data: allMissions,
-          nextCursor: response.data.nextCursor,
+          nextCursor: response.data?.nextCursor,
         ),
       );
 
@@ -240,9 +240,9 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
       if (state is MissionHistoryListSuccess && !event.isRefresh) {
         final current = state as MissionHistoryListSuccess;
 
-        if (current.response.data.nextCursor == null) return;
+        if (current.response.data?.nextCursor == null) return;
 
-        existingMissions = current.response.data.data ?? [];
+        existingMissions = current.response.data?.data ?? [];
       } else {
         emit(MissionLoading());
       }
@@ -252,10 +252,10 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
         cursor: cursor ?? 0,
         limit: event.limit,
       );
-
-      final allMissions = [
+      final List<Mission> newMissions = response.data?.data ?? <Mission>[];
+      final List<Mission> allMissions = [
         ...existingMissions,
-        ...response.data.data,
+        ...newMissions,
       ];
 
       final updatedResponse = MissionListResponse(
@@ -263,7 +263,7 @@ class MissionBloc extends Bloc<MissionEvent, MissionState> {
         message: response.message,
         data: MissionData(
           data: allMissions,
-          nextCursor: response.data.nextCursor,
+          nextCursor: response.data?.nextCursor,
         ),
       );
 
